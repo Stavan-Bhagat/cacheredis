@@ -1,9 +1,7 @@
-/* signin
 
 ::placeholder {
-  color: #9b0000; 
+  color: #9b0000;
 }
-
 .header {
   background-color: #464866;
 }
@@ -16,13 +14,12 @@
   color: #141ea6;
 }
 .formContainer {
-
   padding: 7% 0%;
 }
 #Form {
   width: 35%;
   background-color: #cacad2;
-  padding: 2%;
+  padding: 1% 2%;
   border-radius: 2%;
 }
 .label {
@@ -37,4 +34,4 @@
 }
 #a:hover {
   text-decoration: underline;
-} */
+}
