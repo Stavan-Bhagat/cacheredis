@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": "1a06",
+      "name": "ddd",
+      "email": "d@gmail.com",
+      "role": "admin",
+      "password": "11111111",
+      "confirmPassword": "11111111"
+    },
+    {
+      "id": "319c",
+      "name": "dddddddddddddd",
+      "email": "d@gmail.com",
+      "role": "user",
+      "password": "11111111",
+      "confirmPassword": "11111111"
+    },
+    {
+      "id": "0469",
+      "name": "manthan",
+      "email": "m@gmail.com",
+      "role": "user",
+      "password": "11111111",
+      "confirmPassword": "11111111"
+    }
+  ]
+}

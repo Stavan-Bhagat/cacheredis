@@ -35,3 +35,19 @@
 #a:hover {
   text-decoration: underline;
 }
+/* sideBar */
+.sideBar{
+  background-color:#6c5b7b; 
+  height: 88vh;
+}
+/* blog */
+.blogHeader{
+  background-color: #6c5b7b;
+  text-align: center;
+}
+.SidebarContainer{
+  height: 50%;
+}
+.dashboardContainer{
+ 
+}

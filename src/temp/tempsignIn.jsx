@@ -7,14 +7,23 @@ import axios from "axios";
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
+  const [valid, setValid] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (email === "") {
+      setValid(true);
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (password === "") {
+      setValid(true);
+    }
+  }, [password]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "email") {
       setEmail(value);
     } else if (name === "password") {
@@ -25,47 +34,28 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (email.trim() === "" || password.trim() === "") {
-      return;
-    }
-
-    try {
-      const response = await axios.get("http://localhost:3001/users");
-      const existingUsers = response.data;
-      const user = existingUsers.find(
-        (element) => email === element.email && password === element.password
-      );
-      if (user) {
-        console.log("hello");
-        navigate("/dashboard", { state: { user } });
-      } else {
-        setErrors({ ...errors, password: "Invalid email or password." });
+    if (email === "" || password === "") {
+      setValid(true);
+    } else {
+      try {
+        const response = await axios.get("http://localhost:3001/users");
+        const existingUsers = response.data;
+        const authentication = existingUsers.filter((element) => {
+          if (email === element.email && password === element.password) {
+            return element;
+          }
+        });
+        if (authentication.length < 0) {
+          return;
+        } else {
+          console.log("hello");
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        console.error("Error posting data:", error);
       }
-    } catch (error) {
-      console.error("Error posting data:", error);
     }
   };
-
-  useEffect(() => {
-    const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    const newErrors = { ...errors };
-
-    if (email === "") {
-      newErrors.email = "Email should not be empty";
-    } else if (!emailRegex.test(email)) {
-      newErrors.email = "Enter a valid email";
-    } else {
-      newErrors.email = "";
-    }
-
-    if (password === "") {
-      newErrors.password = "Password should not be empty";
-    } else {
-      newErrors.password = "";
-    }
-
-    setErrors(newErrors);
-  }, [email, password]);
 
   return (
     <>
@@ -87,9 +77,6 @@ function SignIn() {
                 value={email}
                 onChange={handleChange}
               />
-              {errors.email && (
-                <span className="text-danger">{errors.email}</span>
-              )}
             </Col>
           </Form.Group>
           <Form.Group
@@ -108,11 +95,9 @@ function SignIn() {
                 value={password}
                 onChange={handleChange}
               />
-              {errors.password && (
-                <span className="text-danger">{errors.password}</span>
-              )}
             </Col>
           </Form.Group>
+          {valid && <span className="text-danger">Field is empty.</span>}
           <Button className="signIn mt-3" type="submit">
             Sign In
           </Button>{" "}

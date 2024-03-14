@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import "../css/signIn-signUp.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 function SignUp() {
@@ -10,7 +10,7 @@ function SignUp() {
     email: "",
     role: "",
     password: "",
-
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -20,7 +20,6 @@ function SignUp() {
     confirmPassword: "",
   });
 
-  const navigate=useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -44,25 +43,23 @@ function SignUp() {
       console.log("Form has errors. ");
       return;
     }
-    try {
-      const response = await axios.get("http://localhost:3001/users");
+    axios
+    .get("http://localhost:3001/users")
+    .then((response) => {
       const existingUsers = response.data;
 
-      const emailExists = existingUsers.some((user) => user.email === email);
-      if (emailExists) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: "Email already exists",
-        }));
-        return;
-      }
-      const responsePost = await axios.post(
+      const emailExists = existingUsers.some(
+        (user) => user.email === formData.email
+      );
+      if(emailExist){
+        setErrors.email("email already exist")
+        }
+    try {
+      const response = await axios.post(
         "http://localhost:3001/users",
         formData
       );
-      console.log("Data successfully posted:", responsePost.data);
-
-      navigate('/')
+      console.log("Data successfully posted:", response.data);
       setFormData({
         name: "",
         email: "",
@@ -73,7 +70,7 @@ function SignUp() {
     } catch (error) {
       console.error("Error posting data:", error);
     }
-  };
+  }
 
   useEffect(() => {
     const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -96,7 +93,7 @@ function SignUp() {
     if (formData.role === "") {
       newErrors.role = "select a role";
     } else {
-      newErrors.role = "";
+      newErrors.password = "";
     }
 
     if (formData.password === "" || formData.password.length < 8) {
@@ -162,11 +159,13 @@ function SignUp() {
               value={formData.role}
               onChange={handleChange}
             >
-              <option disabled selected value={""}>
+              <option disabled selected>
                 Select Role
               </option>
               <option value="admin">Admin</option>
-              <option value="user">User</option>
+              <option value="user" selected>
+                User
+              </option>
             </Form.Select>
             {errors.role && <span className="text-danger">{errors.role}</span>}
           </Form.Group>
