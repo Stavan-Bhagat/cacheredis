@@ -144,7 +144,7 @@ const Dashboard = () => {
       </Container>
       {/* modal start */}
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="modalTitle">
           <Modal.Title>Update Form</Modal.Title>
         </Modal.Header>
         <Modal.Body>

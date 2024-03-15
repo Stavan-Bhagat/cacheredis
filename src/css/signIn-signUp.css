@@ -45,6 +45,10 @@
   background-color: #6c5b7b;
   text-align: center;
 }
+.modalTitle{
+  background-color: #6c5b7b;
+  color:aliceblue
+}
 .SidebarContainer{
   height: 50%;
 }
