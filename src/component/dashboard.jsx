@@ -11,6 +11,8 @@ import {
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
 import Sidebar from "./sidebar";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
@@ -21,7 +23,9 @@ const Dashboard = () => {
     email: "",
     role: "",
   });
-
+  const userRole = localStorage.getItem("role");
+  const [role, setRole] = useState(userRole !== "user");
+  console.log(userRole, "show role");
   const handleClose = () => setShow(false);
 
   const handleShow = (id) => {
@@ -56,12 +60,17 @@ const Dashboard = () => {
   };
 
   const deleted = async (userId) => {
-    try {
-      await axios.delete(`http://localhost:3001/users/${userId}`);
-      console.log(`User deleted with ID ${userId}`);
-      setUsers(users.filter((user) => user.id !== userId));
-    } catch (error) {
-      console.error("Error deleting user:", error);
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:3001/users/${userId}`);
+        console.log(`User deleted with ID ${userId}`);
+        setUsers(users.filter((user) => user.id !== userId));
+      } catch (error) {
+        console.error("Error deleting user:", error);
+      }
+    } else {
+      return;
     }
   };
 
@@ -88,55 +97,70 @@ const Dashboard = () => {
             title="Options"
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item href="#action/1">Logout</NavDropdown.Item>
+            <NavDropdown.Item>
+              {" "}
+              <Link to="/"> Logout</Link>
+            </NavDropdown.Item>
           </NavDropdown>
         </h3>
       </header>
       <Container fluid className="dashboardContainer">
         <Row>
           <Sidebar />
+
           <Col sm={10}>
             {" "}
             <section className="mt-3">
               <div className="container">
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Edit</th>
-                      <th>Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody className="tableBody">
-                    {users.map((user, index) => (
-                      <tr key={user.id}>
-                        <td>{index + 1}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{user.role}</td>
-                        <td>
-                          <Button
-                            variant="warning"
-                            onClick={() => handleShow(user.id)}
-                          >
-                            Edit
-                          </Button>
-                        </td>
-                        <td>
-                          <Button
-                            variant="danger"
-                            onClick={() => deleted(user.id)}
-                          >
-                            Delete
-                          </Button>
-                        </td>
+                {role ? (
+                  <Table striped responsive>
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody className="tableBody">
+                      {users.map((user, index) => (
+                        <tr key={user.id}>
+                          <td>{index + 1}</td>
+                          <td>{user.name}</td>
+                          <td>{user.email}</td>
+                          <td>{user.role}</td>
+                          <td>
+                            <Button
+                              variant="warning"
+                              onClick={() => handleShow(user.id)}
+                            >
+                              Edit
+                            </Button>
+                          </td>
+                          <td>
+                            <Button
+                              variant="danger"
+                              onClick={() => deleted(user.id)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <Container className="text-white ">
+                    <h1>Hello</h1>
+                    <h4>
+                      {" "}
+                      Welcome to user{" "}
+                      <span className="text-danger">Dashboard</span> section
+                    </h4>
+                  </Container>
+                )}
               </div>
             </section>{" "}
           </Col>
@@ -194,13 +218,6 @@ const Dashboard = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* blog section */}
-      {/* <section>
-        <header className="blogHeader">
-          <h3 className="text-white">Blog</h3> 
-        </header>
-      </section> */}
     </>
   );
 };

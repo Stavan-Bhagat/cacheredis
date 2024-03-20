@@ -10,7 +10,6 @@ function SignUp() {
     email: "",
     role: "",
     password: "",
-
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -20,7 +19,7 @@ function SignUp() {
     confirmPassword: "",
   });
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -62,7 +61,7 @@ function SignUp() {
       );
       console.log("Data successfully posted:", responsePost.data);
 
-      navigate('/')
+      navigate("/");
       setFormData({
         name: "",
         email: "",

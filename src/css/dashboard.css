@@ -1,15 +1,15 @@
 .header {
-    background-color: #464866;
-  }
-  .headerText {
-    text-align: center;
-    color: #ffffff;
-    padding: 1%;
-  }
-  .modalTitle{
-    background-color: #6c5b7b;
-    color:aliceblue
-  }
-  .addBlog{
-    background-color:  #0059b7 ;
-  }
+  background-color: #464866;
+}
+.headerText {
+  text-align: center;
+  color: #ffffff;
+  padding: 1%;
+}
+.modalTitle {
+  background-color: #6c5b7b;
+  color: aliceblue;
+}
+.addBlog {
+  background-color: #0059b7;
+}

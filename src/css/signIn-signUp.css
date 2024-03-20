@@ -1,7 +1,5 @@
-
 ::placeholder {
   color: #9b0000;
-  
 }
 .header {
   background-color: #464866;
@@ -37,22 +35,21 @@
   text-decoration: underline;
 }
 /* sideBar */
-.sideBar{
-  background-color:#6c5b7b; 
+.sideBar {
+  background-color: #6c5b7b;
   height: 88vh;
 }
 /* blog */
-.blogHeader{
+.blogHeader {
   background-color: #6c5b7b;
   text-align: center;
 }
-.modalTitle{
+.modalTitle {
   background-color: #6c5b7b;
-  color:aliceblue
+  color: aliceblue;
 }
-.SidebarContainer{
+.SidebarContainer {
   height: 50%;
 }
-.dashboardContainer{
- 
+.dashboardContainer {
 }

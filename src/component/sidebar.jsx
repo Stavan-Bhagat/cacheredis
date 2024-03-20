@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Col, Button, Container} from "react-bootstrap";
+import { Col, Button, Container } from "react-bootstrap";
 const Sidebar = () => {
   return (
     <>
@@ -10,7 +10,7 @@ const Sidebar = () => {
             <div className="mb-3">
               <Link to="/blog">
                 <Button variant="outline-info">Blog</Button>
-              </Link> 
+              </Link>
             </div>
             <div>
               <Link to="/dashboard">

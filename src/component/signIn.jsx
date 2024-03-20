@@ -7,6 +7,7 @@ import axios from "axios";
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -36,8 +37,8 @@ function SignIn() {
         (element) => email === element.email && password === element.password
       );
       if (user) {
-        console.log("hello");
-        navigate("/dashboard", { state: { user } });
+        localStorage.setItem("role", user.role);
+        navigate("/dashboard");
       } else {
         setErrors({ ...errors, password: "Invalid email or password." });
       }

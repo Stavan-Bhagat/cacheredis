@@ -12,11 +12,14 @@ import {
 } from "react-bootstrap";
 import "../css/dashboard.css";
 import Sidebar from "./sidebar";
+import { Link } from "react-router-dom";
 
 const Blog = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [blog, setBlog] = useState([]);
+  const userRole = localStorage.getItem("role");
+  const [role, setRole] = useState(userRole !== "user");
   const [formData, setFormData] = useState({
     id: "",
     title: "",
@@ -25,7 +28,6 @@ const Blog = () => {
 
   const handleCloseAddModal = () => setShowAddModal(false);
   const handleCloseUpdateModal = () => setShowUpdateModal(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -84,14 +86,18 @@ const Blog = () => {
   };
 
   const handleDelete = async (id) => {
-  
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (confirmDelete) {
     try {
       await axios.delete(`http://localhost:3001/blog/${id}`);
       setBlog(blog.filter((blog) => blog.id !== id));
     } catch (error) {
       console.error("Error deleting blog:", error);
     }
-  };
+  }else{
+    return;
+  }
+  ;}
 
   useEffect(() => {
     fetchBlogData();
@@ -107,7 +113,7 @@ const Blog = () => {
             title="Options"
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item href="#action/1">Logout</NavDropdown.Item>
+            <NavDropdown.Item> <Link to="/"> Logout</Link></NavDropdown.Item>
           </NavDropdown>
         </h3>
       </header>
@@ -117,46 +123,75 @@ const Blog = () => {
           <Col sm={10}>
             <section className="mt-3">
               <div className="addBlog text-center">
-                <h3 className="d-inline-block text-light ">Admin Panel</h3>
-                <Button className="float-end rounded-0" variant="primary" onClick={handleShowAddModal}>Add Blog</Button>
+                <h3 className="d-inline-block text-light ">{userRole} Panel</h3>
+                {role && (
+                  <Button
+                    className="float-end rounded-0"
+                    variant="primary"
+                    onClick={handleShowAddModal}
+                  >
+                    Add Blog
+                  </Button>
+                )}
               </div>
               <div className="container">
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Title</th>
-                      <th>Description</th>
-                      <th>Edit</th>
-                      <th>Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody className="tableBody">
-                    {blog.map((blog, index) => (
-                      <tr key={blog.id}>
-                        <td>{index + 1}</td>
-                        <td>{blog.title}</td>
-                        <td>{blog.description}</td>
-                        <td>
-                          <Button
-                            variant="warning"
-                            onClick={() => handleShowUpdateModal(blog.id)}
-                          >
-                            Edit
-                          </Button>
-                        </td>
-                        <td>
-                          <Button
-                            variant="danger"
-                            onClick={() => handleDelete(blog.id)}
-                          >
-                            Delete
-                          </Button>
-                        </td>
+                {role ? (
+                  <Table striped responsive>
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody className="tableBody">
+                      {blog.map((blog, index) => (
+                        <tr key={blog.id}>
+                          <td>{index + 1}</td>
+                          <td>{blog.title}</td>
+                          <td>{blog.description}</td>
+                          <td>
+                            <Button
+                              variant="warning"
+                              onClick={() => handleShowUpdateModal(blog.id)}
+                            >
+                              Edit
+                            </Button>
+                          </td>
+                          <td>
+                            <Button
+                              variant="danger"
+                              onClick={() => handleDelete(blog.id)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <Table striped responsive>
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody className="tableBody">
+                      {blog.map((blog, index) => (
+                        <tr key={blog.id}>
+                          <td>{index + 1}</td>
+                          <td>{blog.title}</td>
+                          <td>{blog.description}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
               </div>
             </section>{" "}
           </Col>
@@ -201,7 +236,6 @@ const Blog = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
       {/* Update Blog Modal */}
       <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>
         <Modal.Header closeButton className="modalTitle">
