@@ -88,16 +88,16 @@ const Blog = () => {
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
-    try {
-      await axios.delete(`http://localhost:3001/blog/${id}`);
-      setBlog(blog.filter((blog) => blog.id !== id));
-    } catch (error) {
-      console.error("Error deleting blog:", error);
+      try {
+        await axios.delete(`http://localhost:3001/blog/${id}`);
+        setBlog(blog.filter((blog) => blog.id !== id));
+      } catch (error) {
+        console.error("Error deleting blog:", error);
+      }
+    } else {
+      return;
     }
-  }else{
-    return;
-  }
-  ;}
+  };
 
   useEffect(() => {
     fetchBlogData();
@@ -113,7 +113,10 @@ const Blog = () => {
             title="Options"
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item> <Link to="/"> Logout</Link></NavDropdown.Item>
+            <NavDropdown.Item>
+              {" "}
+              <Link to="/"> Logout</Link>
+            </NavDropdown.Item>
           </NavDropdown>
         </h3>
       </header>

@@ -3,16 +3,15 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import "../css/signIn-signUp.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginSuccess, loginFailure } from "../store/authSlice";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,12 +37,15 @@ function SignIn() {
       );
       if (user) {
         localStorage.setItem("role", user.role);
+        dispatch(loginSuccess(user));
         navigate("/dashboard");
       } else {
         setErrors({ ...errors, password: "Invalid email or password." });
+        dispatch(loginFailure("Invalid email or password."));
       }
     } catch (error) {
       console.error("Error posting data:", error);
+      dispatch(loginFailure("Error posting data:", error.message));
     }
   };
 

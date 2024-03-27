@@ -11,10 +11,13 @@ import {
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
 import Sidebar from "./sidebar";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 
 const Dashboard = () => {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
@@ -24,9 +27,30 @@ const Dashboard = () => {
     role: "",
   });
   const userRole = localStorage.getItem("role");
+  // const userRole = user.role;
+
   const [role, setRole] = useState(userRole !== "user");
-  console.log(userRole, "show role");
   const handleClose = () => setShow(false);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/users");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   const handleShow = (id) => {
     const user = users.find((user) => user.id === id);
@@ -74,19 +98,6 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/users");
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <>
       <header className="header">
@@ -97,10 +108,7 @@ const Dashboard = () => {
             title="Options"
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item>
-              {" "}
-              <Link to="/"> Logout</Link>
-            </NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
           </NavDropdown>
         </h3>
       </header>
@@ -109,9 +117,9 @@ const Dashboard = () => {
           <Sidebar />
 
           <Col sm={10}>
-            {" "}
             <section className="mt-3">
               <div className="container">
+                <h1 className="text-white text-center">Hello, {user.name}</h1>
                 {role ? (
                   <Table striped responsive>
                     <thead>
@@ -153,16 +161,14 @@ const Dashboard = () => {
                   </Table>
                 ) : (
                   <Container className="text-white ">
-                    <h1>Hello</h1>
                     <h4>
-                      {" "}
-                      Welcome to user{" "}
+                      Welcome to user
                       <span className="text-danger">Dashboard</span> section
                     </h4>
                   </Container>
                 )}
               </div>
-            </section>{" "}
+            </section>
           </Col>
         </Row>
       </Container>
