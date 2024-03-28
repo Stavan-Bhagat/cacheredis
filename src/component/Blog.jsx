@@ -12,13 +12,19 @@ import {
 } from "react-bootstrap";
 import "../css/dashboard.css";
 import Sidebar from "./sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 
 const Blog = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
   const [showAddModal, setShowAddModal] = useState(false);
+  const dispatch = useDispatch();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [blog, setBlog] = useState([]);
   const userRole = localStorage.getItem("role");
+  const isLogin = useSelector((state) => state.auth.isLogin);
   const [role, setRole] = useState(userRole !== "user");
   const [formData, setFormData] = useState({
     id: "",
@@ -34,6 +40,11 @@ const Blog = () => {
       ...prevFormData,
       [name]: value,
     }));
+  };
+  const handleLogout = () => {
+    dispatch(logout(false));
+    sessionStorage.removeItem("user");
+    navigate("/");
   };
 
   const handleShowAddModal = () => {
@@ -98,11 +109,18 @@ const Blog = () => {
       return;
     }
   };
+  useEffect(() => {
+    if (isLogin === false) {
+      navigate("/");
+    }
+  }, [isLogin, navigate]);
 
   useEffect(() => {
     fetchBlogData();
   }, []);
-
+  if (!user) {
+    return navigate("/");
+  }
   return (
     <>
       <header className="header">
@@ -113,10 +131,7 @@ const Blog = () => {
             title="Options"
             id="basic-nav-dropdown"
           >
-            <NavDropdown.Item>
-              {" "}
-              <Link to="/"> Logout</Link>
-            </NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
           </NavDropdown>
         </h3>
       </header>

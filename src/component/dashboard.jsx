@@ -11,13 +11,15 @@ import {
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
 import Sidebar from "./sidebar";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  // const isLogin = useSelector((state) => state.auth.isLogin);
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
@@ -26,17 +28,23 @@ const Dashboard = () => {
     email: "",
     role: "",
   });
-  const userRole = localStorage.getItem("role");
-  // const userRole = user.role;
-
+  const userString = sessionStorage.getItem("user");
+  let userObject = JSON.parse(userString);
+  const isLogin = sessionStorage.getItem("isLogin");
+  const userRole = userObject ? userObject.role : null;
   const [role, setRole] = useState(userRole !== "user");
   const handleClose = () => setShow(false);
 
   const handleLogout = () => {
     dispatch(logout());
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("isLogin");
+    console.log("logout");
+    navigate("/");
   };
 
   useEffect(() => {
+    console.log("useeffect 2");
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3001/users");
@@ -48,9 +56,6 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
-  if (!user) {
-    return <Navigate to="/" />;
-  }
 
   const handleShow = (id) => {
     const user = users.find((user) => user.id === id);
@@ -97,7 +102,9 @@ const Dashboard = () => {
       return;
     }
   };
-
+  if (!user) {
+    return navigate("/");
+  }
   return (
     <>
       <header className="header">

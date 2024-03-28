@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Col, Button, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 // card
-import uimage from "../image/u.png"
+import userImage from "../image/u.png";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -22,7 +22,7 @@ const Sidebar = () => {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={uimage}
+                  image={userImage}
                   alt="User"
                 />
                 <CardContent>

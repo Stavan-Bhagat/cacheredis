@@ -36,7 +36,6 @@ function SignIn() {
         (element) => email === element.email && password === element.password
       );
       if (user) {
-        localStorage.setItem("role", user.role);
         dispatch(loginSuccess(user));
         navigate("/dashboard");
       } else {
