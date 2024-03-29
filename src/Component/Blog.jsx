@@ -11,7 +11,7 @@ import {
   Table,
 } from "react-bootstrap";
 import "../css/dashboard.css";
-import Sidebar from "./sidebar";
+import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
@@ -23,9 +23,8 @@ const Blog = () => {
   const dispatch = useDispatch();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [blog, setBlog] = useState([]);
-  const userRole = localStorage.getItem("role");
-  const isLogin = useSelector((state) => state.auth.isLogin);
-  const [role, setRole] = useState(userRole !== "user");
+  const userRole = user.role;
+  const [role, setRole] = useState(userRole);
   const [formData, setFormData] = useState({
     id: "",
     title: "",
@@ -109,18 +108,16 @@ const Blog = () => {
       return;
     }
   };
-  useEffect(() => {
-    if (isLogin === false) {
-      navigate("/");
-    }
-  }, [isLogin, navigate]);
+  // useEffect(() => {
+  //   if (isLogin === false) {
+  //     navigate("/");
+  //   }
+  // }, [isLogin, navigate]);
 
   useEffect(() => {
     fetchBlogData();
   }, []);
-  if (!user) {
-    return navigate("/");
-  }
+
   return (
     <>
       <header className="header">
@@ -142,7 +139,7 @@ const Blog = () => {
             <section className="mt-3">
               <div className="addBlog text-center">
                 <h3 className="d-inline-block text-light ">{userRole} Panel</h3>
-                {role && (
+                {role === "admin" && (
                   <Button
                     className="float-end rounded-0"
                     variant="primary"
@@ -153,7 +150,7 @@ const Blog = () => {
                 )}
               </div>
               <div className="container">
-                {role ? (
+                {role === "admin" ? (
                   <Table striped responsive>
                     <thead>
                       <tr>

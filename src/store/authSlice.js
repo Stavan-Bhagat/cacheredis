@@ -4,10 +4,15 @@ const getUserFromSessionStorage = () => {
   const userData = sessionStorage.getItem("user");
   return userData ? JSON.parse(userData) : null;
 };
+const getLoginFromSessionStorage=()=>{
+  const isLogin = sessionStorage.getItem("isLogin");
+  return isLogin ? JSON.parse(isLogin) : false;
+};
+
 const initialState = {
   user: getUserFromSessionStorage(),
   error: null,
-  isLogin: false,
+  isLogin:getLoginFromSessionStorage() ,
 };
 
 const authSlice = createSlice({

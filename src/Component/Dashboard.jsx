@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
-import Sidebar from "./sidebar";
+import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
@@ -102,9 +102,7 @@ const Dashboard = () => {
       return;
     }
   };
-  if (!user) {
-    return navigate("/");
-  }
+
   return (
     <>
       <header className="header">
@@ -150,6 +148,7 @@ const Dashboard = () => {
                             <Button
                               variant="warning"
                               onClick={() => handleShow(user.id)}
+                              disabled={user.role === 'admin' && user.id === userObject.id}
                             >
                               Edit
                             </Button>
@@ -158,6 +157,7 @@ const Dashboard = () => {
                             <Button
                               variant="danger"
                               onClick={() => deleted(user.id)}
+                              disabled={user.role === 'admin' && user.id === userObject.id}
                             >
                               Delete
                             </Button>

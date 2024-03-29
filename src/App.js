@@ -1,27 +1,47 @@
+// import "./App.css";
+// import SignIn from "./Component/SignIn";
+// import SignUp from "./Component/SignUp";
+// import { BrowserRouter as Router, Route, Routes ,useNavigate} from "react-router-dom";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import Blog from "./Component/Blog";
+// import Dashboard from "./Component/Dashboard";
+// import { Provider, useSelector } from "react-redux";
+// import store from "./store/store";
+// import { useEffect } from "react";
+
 import "./App.css";
-import SignIn from "./component/signIn";
-import SignUp from "./component/signUp";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import { Provider, useSelector } from "react-redux";
+// import store from "./store/store";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Blog from "./component/Blog";
-import Dashboard from "./component/dashboard";
-import { Provider } from "react-redux";
-import store from "./store/store";
+import SignIn from "./Component/SignIn";
+import SignUp from "./Component/SignUp";
+import Dashboard from "./Component/Dashboard";
+import Blog from "./Component/Blog";
 
 function App() {
+  const isLogin = useSelector((state) => state.auth.isLogin);
   return (
-    <>
-      <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route exact path="/" element={<SignIn />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/blog" element={<Blog />} />
-          </Routes>
-        </Router>
-      </Provider>
-    </>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={isLogin ? <Navigate to="/dashboard" /> : <SignIn />}
+        />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route
+          path="/dashboard"
+          element={isLogin ? <Dashboard /> : <Navigate to="/" />}
+        />
+        <Route path="/blog" element={<Blog />} />
+      </Routes>
+    </Router>
   );
 }
 
