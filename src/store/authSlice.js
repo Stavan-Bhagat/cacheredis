@@ -1,18 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  GET_SESSION_USER,
+  GET_IS_LOGIN,
+  REMOVE_SESSION_USER,
+} from "../Constant/constant";
 
 const getUserFromSessionStorage = () => {
-  const userData = sessionStorage.getItem("user");
+  const userData = GET_SESSION_USER;
   return userData ? JSON.parse(userData) : null;
 };
-const getLoginFromSessionStorage=()=>{
-  const isLogin = sessionStorage.getItem("isLogin");
+const getLoginFromSessionStorage = () => {
+  const isLogin = GET_IS_LOGIN;
   return isLogin ? JSON.parse(isLogin) : false;
 };
 
 const initialState = {
   user: getUserFromSessionStorage(),
   error: null,
-  isLogin:getLoginFromSessionStorage() ,
+  isLogin: getLoginFromSessionStorage(),
 };
 
 const authSlice = createSlice({
@@ -32,7 +37,7 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.isLogin = false;
 
-      sessionStorage.removeItem("user");
+      REMOVE_SESSION_USER();
       sessionStorage.setItem("isLogin", "false");
     },
     logout: (state, action) => {
@@ -40,7 +45,7 @@ const authSlice = createSlice({
       state.error = null;
       state.isLogin = false;
 
-      sessionStorage.removeItem("user");
+      REMOVE_SESSION_USER();
       sessionStorage.setItem("isLogin", "false");
     },
   },

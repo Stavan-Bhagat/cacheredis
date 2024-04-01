@@ -1,54 +1,6 @@
 {
   "users": [
     {
-      "id": "0469",
-      "name": "manthan",
-      "email": "m@gmail.com",
-      "role": "user",
-      "password": "11111111",
-      "confirmPassword": "11111111"
-    },
-    {
-      "id": "648e",
-      "name": "selena",
-      "email": "sel@gmail.com",
-      "role": "admin",
-      "password": "11111111",
-      "confirmPassword": "11111111"
-    },
-    {
-      "id": "60e2",
-      "name": "abc",
-      "email": "abc@gmail.com",
-      "role": "admin",
-      "password": "Abc@1234",
-      "confirmPassword": "Abc@1234"
-    },
-    {
-      "id": "ec06",
-      "name": "prince",
-      "email": "p@gmail.com",
-      "role": "admin",
-      "password": "11111111",
-      "confirmPassword": "11111111"
-    },
-    {
-      "id": "f3a0",
-      "name": "stavan",
-      "email": "s@gmail.com",
-      "role": "admin",
-      "password": "11111111",
-      "confirmPassword": "11111111"
-    },
-    {
-      "id": "5456",
-      "name": "rjhy",
-      "email": "ri@gmail.com",
-      "role": "admin",
-      "password": "U2FsdGVkX184zCJ82JiRoeH3HhkhdKP/WFZ2TfEZc5I=",
-      "confirmPassword": "11111111"
-    },
-    {
       "id": "cb9b",
       "name": "tejas",
       "email": "t@gmail.com",
@@ -56,17 +8,17 @@
       "password": "U2FsdGVkX187Pnfakxoa9mBOkI7ZutJmvJb4CiTTZjQ="
     },
     {
-      "id": "ce1b",
-      "name": "gggg",
-      "email": "g@gmail.com",
+      "id": "7319",
+      "name": "stavan",
+      "email": "s@gmail.com",
       "role": "admin",
-      "password": "U2FsdGVkX1+Z8OklIF7uL1NkT2KFqA7pcWUrbJVcmeE="
+      "password": "U2FsdGVkX18IrR2VE9ft1zHbjZzuoUbtVjeVONywCmU="
     }
   ],
   "blog": [
     {
       "id": "98df",
-      "title": "hgfhtdgfd",
+      "title": "d",
       "description": "gfdgfdgrfdgfdgfdg"
     },
     {
@@ -75,9 +27,9 @@
       "description": "cbgcvcbvcbcbvc"
     },
     {
-      "id": "4126",
-      "title": "asdasdsa das ds",
-      "description": "dsdasd asdasd"
+      "id": "af25",
+      "title": "ddddddddddd",
+      "description": "dddddddddddddddddddd"
     }
   ]
 }

@@ -15,6 +15,8 @@ import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import { BLOG_API, fetchBlogData } from "../Services/services";
+import { REMOVE_SESSION_USER } from "../Constant/constant";
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -42,7 +44,7 @@ const Blog = () => {
   };
   const handleLogout = () => {
     dispatch(logout(false));
-    sessionStorage.removeItem("user");
+    REMOVE_SESSION_USER();
     navigate("/");
   };
 
@@ -64,19 +66,10 @@ const Blog = () => {
     setShowUpdateModal(true);
   };
 
-  const fetchBlogData = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/blog");
-      setBlog(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:3001/blog`, formData);
+      await axios.post(BLOG_API, formData);
       fetchBlogData();
       setShowAddModal(false);
     } catch (error) {
@@ -87,7 +80,7 @@ const Blog = () => {
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:3001/blog/${formData.id}`, formData);
+      await axios.patch(`${BLOG_API}/${formData.id}`, formData);
       fetchBlogData();
       setShowUpdateModal(false);
     } catch (error) {
@@ -99,7 +92,7 @@ const Blog = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3001/blog/${id}`);
+        await axios.delete(`${BLOG_API}/${id}`);
         setBlog(blog.filter((blog) => blog.id !== id));
       } catch (error) {
         console.error("Error deleting blog:", error);
@@ -108,14 +101,8 @@ const Blog = () => {
       return;
     }
   };
-  // useEffect(() => {
-  //   if (isLogin === false) {
-  //     navigate("/");
-  //   }
-  // }, [isLogin, navigate]);
-
   useEffect(() => {
-    fetchBlogData();
+    fetchBlogData(setBlog);
   }, []);
 
   return (

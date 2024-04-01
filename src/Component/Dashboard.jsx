@@ -14,6 +14,13 @@ import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import { USER_API, fetchUserData } from "../Services/services";
+import {
+  GET_SESSION_USER,
+  GET_IS_LOGIN,
+  REMOVE_SESSION_USER,
+  REMOVE_IS_LOGIN,
+} from "../Constant/constant";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -28,33 +35,22 @@ const Dashboard = () => {
     email: "",
     role: "",
   });
-  const userString = sessionStorage.getItem("user");
+  const userString = GET_SESSION_USER;
   let userObject = JSON.parse(userString);
-  const isLogin = sessionStorage.getItem("isLogin");
+  const isLogin = GET_IS_LOGIN;
   const userRole = userObject ? userObject.role : null;
   const [role, setRole] = useState(userRole !== "user");
   const handleClose = () => setShow(false);
 
   const handleLogout = () => {
     dispatch(logout());
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("isLogin");
-    console.log("logout");
+    REMOVE_SESSION_USER();
+    REMOVE_IS_LOGIN();
     navigate("/");
   };
 
   useEffect(() => {
-    console.log("useeffect 2");
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/users");
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    fetchUserData(setUsers);
   }, []);
 
   const handleShow = (id) => {
@@ -75,12 +71,9 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responsePost = await axios.patch(
-        `http://localhost:3001/users/${id}`,
-        formData
-      );
+      const responsePost = await axios.patch(`${USER_API}/${id}`, formData);
       console.log("Data successfully updated:", responsePost.data);
-      const response = await axios.get("http://localhost:3001/users");
+      const response = await axios.get(USER_API);
       setUsers(response.data);
       setShow(false);
     } catch (error) {
@@ -92,7 +85,7 @@ const Dashboard = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3001/users/${userId}`);
+        await axios.delete(`${USER_API}/${userId}`);
         console.log(`User deleted with ID ${userId}`);
         setUsers(users.filter((user) => user.id !== userId));
       } catch (error) {
@@ -148,7 +141,10 @@ const Dashboard = () => {
                             <Button
                               variant="warning"
                               onClick={() => handleShow(user.id)}
-                              disabled={user.role === 'admin' && user.id === userObject.id}
+                              disabled={
+                                user.role === "admin" &&
+                                user.id === userObject.id
+                              }
                             >
                               Edit
                             </Button>
@@ -157,7 +153,10 @@ const Dashboard = () => {
                             <Button
                               variant="danger"
                               onClick={() => deleted(user.id)}
-                              disabled={user.role === 'admin' && user.id === userObject.id}
+                              disabled={
+                                user.role === "admin" &&
+                                user.id === userObject.id
+                              }
                             >
                               Delete
                             </Button>

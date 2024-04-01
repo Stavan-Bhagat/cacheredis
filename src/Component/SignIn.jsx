@@ -3,11 +3,12 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import "../css/signIn-signUp.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import CryptoJS from "crypto-js"; // Import CryptoJS
+import CryptoJS from "crypto-js";
 import { useDispatch } from "react-redux";
 import { loginSuccess, loginFailure } from "../store/authSlice";
 import { useForm } from "react-hook-form";
-
+import { USER_API } from "../Services/services";
+import { AUTHENTICATION_ERROR_MESSAGE } from "../Constant/constant";
 function SignIn() {
   const {
     register,
@@ -19,29 +20,36 @@ function SignIn() {
   const [formErrors, setFormErrors] = useState({});
 
   const decryptPassword = (encryptedPassword) => {
-    // Decrypt password using CryptoJS AES decryption
-    console.log("Encrypted Password:", encryptedPassword);
-    const bytes = CryptoJS.AES.decrypt(encryptedPassword, "secret_key");
-    console.log("Decrypted Bytes:", bytes);
-    const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
-    console.log("Decrypted Password:", decryptedPassword);
-    return decryptedPassword;
+    try {
+      console.log("Encrypted Password:", encryptedPassword);
+      const bytes = CryptoJS.AES.decrypt(encryptedPassword, "secret key");
+      console.log("Decrypted Bytes:", bytes);
+
+      const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      console.log("Decrypted Password:", decryptedPassword);
+
+      return decryptedPassword;
+    } catch (error) {
+      console.error("Decryption error:", error);
+      return null;
+    }
   };
+
   const onSubmit = async (formData) => {
     try {
-      const response = await axios.get("http://localhost:3001/users");
+      const response = await axios.get(`${USER_API}`);
       const existingUsers = response.data;
       const user = existingUsers.find(
         (element) =>
           formData.email === element.email &&
-          decryptPassword(element.password) === formData.password // Decrypt and compare passwords
+          decryptPassword(element.password) === formData.password
       );
       if (user) {
         dispatch(loginSuccess(user));
         navigate("/dashboard");
       } else {
-        setFormErrors({ password: "Invalid email or password." });
-        dispatch(loginFailure("Invalid email or password."));
+        setFormErrors({ password: `${AUTHENTICATION_ERROR_MESSAGE}` });
+        dispatch(loginFailure(`${AUTHENTICATION_ERROR_MESSAGE}`));
       }
     } catch (error) {
       console.error("Error fetching data:", error);
