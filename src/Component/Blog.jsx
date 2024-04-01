@@ -70,7 +70,7 @@ const Blog = () => {
     e.preventDefault();
     try {
       await axios.post(BLOG_API, formData);
-      fetchBlogData();
+      fetchBlogData(setBlog); 
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding blog:", error);
@@ -81,7 +81,7 @@ const Blog = () => {
     e.preventDefault();
     try {
       await axios.patch(`${BLOG_API}/${formData.id}`, formData);
-      fetchBlogData();
+      fetchBlogData(setBlog); 
       setShowUpdateModal(false);
     } catch (error) {
       console.error("Error updating blog:", error);

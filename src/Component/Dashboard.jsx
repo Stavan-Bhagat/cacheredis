@@ -39,7 +39,7 @@ const Dashboard = () => {
   let userObject = JSON.parse(userString);
   const isLogin = GET_IS_LOGIN;
   const userRole = userObject ? userObject.role : null;
-  const [role, setRole] = useState(userRole !== "user");
+  const [role, setRole] = useState(user.role);
   const handleClose = () => setShow(false);
 
   const handleLogout = () => {
@@ -54,10 +54,13 @@ const Dashboard = () => {
   }, []);
 
   const handleShow = (id) => {
+    console.log("Users:", users);
     const user = users.find((user) => user.id === id);
+    console.log("User:", user);
     setFormData(user);
     setId(id);
     setShow(true);
+    console.log(id);
   };
 
   const handleChange = (e) => {
@@ -118,7 +121,7 @@ const Dashboard = () => {
             <section className="mt-3">
               <div className="container">
                 <h1 className="text-white text-center">Hello, {user.name}</h1>
-                {role ? (
+                {role === "admin" ? (
                   <Table striped responsive>
                     <thead>
                       <tr>
@@ -143,7 +146,7 @@ const Dashboard = () => {
                               onClick={() => handleShow(user.id)}
                               disabled={
                                 user.role === "admin" &&
-                                user.id === userObject.id
+                                user.id === userObject?.id
                               }
                             >
                               Edit
@@ -155,7 +158,7 @@ const Dashboard = () => {
                               onClick={() => deleted(user.id)}
                               disabled={
                                 user.role === "admin" &&
-                                user.id === userObject.id
+                                user.id === userObject?.id
                               }
                             >
                               Delete
