@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import "../css/signIn-signUp.css";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
+// import axios from "axios";
 import { useForm } from "react-hook-form";
 import CryptoJS from "crypto-js";
-import { USER_API } from "../Services/services";
+// import { USER_API } from "../Services/services";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import axiosInstance from "../utils/axiosInstance";
+// import axios  from "axios";
 
 function SignUp() {
   const {
@@ -15,38 +17,51 @@ function SignUp() {
     formState: { errors },
     watch,
   } = useForm();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async ({ name, email, role, password }) => {
     try {
-      const response = await axios.get(USER_API);
-      const existingUsers = response.data;
-
-      const emailExists = existingUsers.find((user) => user.email === email);
-      if (emailExists) {
-        return alert("Email already exists");
-      }
-
       const encryptedPassword = CryptoJS.AES.encrypt(
         password,
-        "secret key"
+        "secretkey123"
       ).toString();
-
-      const formData = {
-        name,
-        email,
-        role,
-        password: encryptedPassword,
-      };
-
-      const responsePost = await axios.post(USER_API, formData);
-      console.log("Data successfully posted:", responsePost.data);
-
-      navigate("/");
+      const userData = { name, email, role, password:encryptedPassword };
+      const response = await axiosInstance.post(`/submit/register`, userData);
+      // const response = await axios.post(`http://localhost:5000/submit/register`, userData);
+      console.log("Data posted:", response.data);
     } catch (error) {
       console.error("Error posting data:", error);
     }
+
+    // try {
+    //   const response = await axios.get(USER_API);
+    //   const existingUsers = response.data;
+
+    //   const emailExists = existingUsers.find((user) => user.email === email);
+    //   if (emailExists) {
+    //     return alert("Email already exists");
+    //   }
+
+    //   const encryptedPassword = CryptoJS.AES.encrypt(
+    //     password,
+    //     "secret key"
+    //   ).toString();
+
+    //   const formData = {
+    //     name,
+    //     email,
+    //     role,
+    //     password: encryptedPassword,
+    //   };
+
+    //   const responsePost = await axios.post(USER_API, formData);
+    //   console.log("Data successfully posted:", responsePost.data);
+
+    //   navigate("/");
+    // } catch (error) {
+    //   console.error("Error posting data:", error);
+    // }
   };
 
   const watchPassword = watch("password", "");

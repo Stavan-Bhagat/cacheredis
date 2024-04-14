@@ -17,7 +17,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import store from "./store/store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SignIn from "./Component/SignIn";
