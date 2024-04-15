@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import CryptoJS from "crypto-js";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 
 function SignUp() {
   const {
@@ -23,8 +24,8 @@ function SignUp() {
         "secretkey123"
       ).toString();
       const userData = { name, email, role, password: encryptedPassword };
-      // const response = await axiosInstance.post('/submit/register', userData);
-      const response = await axiosInstance.post(`http://localhost:5000/submit/register`, userData);
+      const response = await axiosInstance.post("/submit/register", userData);
+
       console.log("Data posted:", response.data);
     } catch (error) {
       console.error("Error posting data:", error);

@@ -39,7 +39,8 @@ const Dashboard = () => {
   let userObject = JSON.parse(userString);
   const isLogin = GET_IS_LOGIN;
   const userRole = userObject ? userObject.role : null;
-  const [role, setRole] = useState(user.role);
+  const [role, setRole] = useState(userRole);
+  console.log("role",role);
   const handleClose = () => setShow(false);
 
   const handleLogout = () => {
@@ -50,7 +51,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchUserData(setUsers);
+    const result=fetchUserData();
+    setUsers(result.data);
   }, []);
 
   const handleShow = (id) => {

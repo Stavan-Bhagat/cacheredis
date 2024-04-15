@@ -5,10 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import { useDispatch } from "react-redux";
-import { loginSuccess, loginFailure } from "../store/authSlice";
 import { useForm } from "react-hook-form";
 import { USER_API } from "../Services/services";
-import { AUTHENTICATION_ERROR_MESSAGE } from "../Constant/constant";
+import {
+  AUTHENTICATION_ERROR_MESSAGE,
+  SET_IS_LOGIN,
+  SET_NAME,
+} from "../Constant/constant";
+import { fetchUserData } from "../Services/services";
+import axiosInstance from "../utils/axiosInstance";
+import { loginSuccess, loginFailure, logout } from "../store/authSlice";
+
 function SignIn() {
   const {
     register,
@@ -37,19 +44,29 @@ function SignIn() {
 
   const onSubmit = async (formData) => {
     try {
-      const response = await axios.get(`${USER_API}`);
-      const existingUsers = response.data;
-      const user = existingUsers.find(
-        (element) =>
-          formData.email === element.email &&
-          decryptPassword(element.password) === formData.password
-      );
-      if (user) {
-        dispatch(loginSuccess(user));
+      const response = await axiosInstance.post(`/submit/login`, formData);
+
+      // const existingUsers =fetchUserData();
+      // console.log("existing",existingUsers,typeof (existingUsers))
+
+      // const existingUsers = response.data;
+      // const user = existingUsers.find(
+      //   (element) =>
+      //     formData.email === element.email &&
+      //     decryptPassword(element.password) === formData.password
+      // );
+      console.log("res", response.data);
+      const { success, message,token, userData } = response.data;
+      // const token = response.data.token;
+    
+      console.log("userrrrrrrrrrrrdata",userData)
+      sessionStorage.setItem("token", token);
+      if (success) {
+        dispatch(loginSuccess(userData));
+        SET_NAME(userData.name);
         navigate("/dashboard");
       } else {
-        setFormErrors({ password: `${AUTHENTICATION_ERROR_MESSAGE}` });
-        dispatch(loginFailure(`${AUTHENTICATION_ERROR_MESSAGE}`));
+        return "Login fail", message;
       }
     } catch (error) {
       console.error("Error fetching data:", error);

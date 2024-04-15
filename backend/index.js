@@ -6,12 +6,12 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT;
-const corsApi = process.env.CORS_ORIGIN;
+const corsOrigin = process.env.CORS_ORIGIN;
 
 database();
 
 app.use(express.json());
-app.use(cors({ origin: corsApi }));
+app.use(cors({ origin: corsOrigin }));
 app.use("/submit", userRoutes);
 app.use("/", (req, res) => {
   res.send("demo api")

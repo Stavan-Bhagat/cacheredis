@@ -33,6 +33,7 @@
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-json-server\"",
     "start-react": "react-scripts start",
+    "dubug":"nodemon app.js",
     "start-json-server": "json-server --watch db.json --port 3001"
   },
   "eslintConfig": {
