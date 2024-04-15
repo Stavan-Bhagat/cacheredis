@@ -8,12 +8,12 @@ const userController = {
       const { email, password } = req.body;
       console.log(email, password);
       const userData = await userService.login({ email, password });
-
       if (userData.success) {
-        const { message, name } = userData;
+        // const { message, name =} = userData;
         // Generate JWT token
         const token = jwt.sign(userData, jwtSecretKey, { expiresIn: "20s" });
-        res.status(200).json({ success: true, message, token ,user:userData.user});
+        res.status(200).json({ success: true, message:userData.message, token ,user:userData.user});
+        console.log("uuuuuuuuuuuuuuuuuu",userData.user);
       } else {
         const { message } = userData;
         res.status(401).json({ success: false, message });

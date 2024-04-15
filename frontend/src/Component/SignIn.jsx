@@ -56,14 +56,14 @@ function SignIn() {
       //     decryptPassword(element.password) === formData.password
       // );
       console.log("res", response.data);
-      const { success, message,token, userData } = response.data;
+      const { success, message,token, user } = response.data;
       // const token = response.data.token;
     
-      console.log("userrrrrrrrrrrrdata",userData)
+      console.log("userrrrrrrrrrrrdata",user)
       sessionStorage.setItem("token", token);
       if (success) {
-        dispatch(loginSuccess(userData));
-        SET_NAME(userData.name);
+        dispatch(loginSuccess(user));
+        SET_NAME(user.name);
         navigate("/dashboard");
       } else {
         return "Login fail", message;
