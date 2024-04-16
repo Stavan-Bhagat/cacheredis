@@ -56,11 +56,10 @@ function SignIn() {
       //     decryptPassword(element.password) === formData.password
       // );
       console.log("res", response.data);
-      const { success, message,token, user } = response.data;
+      const { success, message,accessToken,refreshToken, user } = response.data;
       // const token = response.data.token;
-    
-      console.log("userrrrrrrrrrrrdata",user)
-      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken",refreshToken);
       if (success) {
         dispatch(loginSuccess(user));
         SET_NAME(user.name);

@@ -9,11 +9,23 @@ const userController = {
       console.log(email, password);
       const userData = await userService.login({ email, password });
       if (userData.success) {
-        // const { message, name =} = userData;
-        // Generate JWT token
-        const token = jwt.sign(userData, jwtSecretKey, { expiresIn: "20s" });
-        res.status(200).json({ success: true, message:userData.message, token ,user:userData.user});
-        console.log("uuuuuuuuuuuuuuuuuu",userData.user);
+        // Generate access token
+        const expiresIn = "15s"; // Adjust the expiration time as needed
+        const accessToken = jwt.sign(userData, jwtSecretKey, {
+          expiresIn,
+        });
+        const expirationTime = Math.floor(Date.now() / 1000) + jwt.decode(accessToken).exp;
+        console.log("Access token expiration time:", new Date(expirationTime * 1000)); // Log expiration time
+        // Generate refresh token
+        const refreshToken = jwt.sign({ email: userData.email }, jwtSecretKey);
+        res.status(200).json({
+          success: true,
+          message: userData.message,
+          accessToken,
+          refreshToken,
+          user: userData.user,
+          expiresIn,
+        });
       } else {
         const { message } = userData;
         res.status(401).json({ success: false, message });
@@ -23,6 +35,7 @@ const userController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+
   register: async (req, res) => {
     try {
       const { name, email, password, role } = req.body;
@@ -50,6 +63,30 @@ const userController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+  refreshToken: (req, res) => {
+    const refreshToken = req.body.refreshToken;
+
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+      const newAccessToken = jwt.sign(
+        { userId: decoded.userId },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "1m" }
+      );
+
+      res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      if (error.name === "TokenExpiredError") {
+        // Handle expired refresh token separately
+        return res.status(401).json({ message: "Refresh token has expired" });
+      } else {
+        // Handle other errors
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+    }
+  },
+
 };
 
 module.exports = userController;

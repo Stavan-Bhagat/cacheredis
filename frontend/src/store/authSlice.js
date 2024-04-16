@@ -6,8 +6,8 @@ import {
 } from "../Constant/constant";
 
 const getUserFromSessionStorage = () => {
-  const userData = GET_SESSION_USER;
-  return userData ? JSON.parse(userData) : null;
+  const userData = GET_SESSION_USER();
+  return userData ? userData : null;
 };
 const getLoginFromSessionStorage = () => {
   const isLogin = GET_IS_LOGIN;

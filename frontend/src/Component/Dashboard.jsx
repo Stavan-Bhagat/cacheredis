@@ -24,6 +24,11 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+
+  const userObject = GET_SESSION_USER();
+  const userRole = userObject ? userObject.role : null;
+
+  const isLogin = GET_IS_LOGIN;
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   // const isLogin = useSelector((state) => state.auth.isLogin);
@@ -35,12 +40,9 @@ const Dashboard = () => {
     email: "",
     role: "",
   });
-  const userString = GET_SESSION_USER;
-  let userObject = JSON.parse(userString);
-  const isLogin = GET_IS_LOGIN;
-  const userRole = userObject ? userObject.role : null;
+
   const [role, setRole] = useState(userRole);
-  console.log("role",role);
+  console.log("role", role);
   const handleClose = () => setShow(false);
 
   const handleLogout = () => {
@@ -51,12 +53,16 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    const result=fetchUserData();
-    setUsers(result.data);
+    fetchUserData()
+      .then((result) => {
+        setUsers(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
   }, []);
 
   const handleShow = (id) => {
-    console.log("Users:", users);
     const user = users.find((user) => user.id === id);
     console.log("User:", user);
     setFormData(user);
@@ -137,7 +143,7 @@ const Dashboard = () => {
                     </thead>
                     <tbody className="tableBody">
                       {users.map((user, index) => (
-                        <tr key={user.id}>
+                        <tr key={user._id}>
                           <td>{index + 1}</td>
                           <td>{user.name}</td>
                           <td>{user.email}</td>
@@ -147,8 +153,8 @@ const Dashboard = () => {
                               variant="warning"
                               onClick={() => handleShow(user.id)}
                               disabled={
-                                user.role === "admin" &&
-                                user.id === userObject?.id
+                                user.role === "admin"
+                                //&& user.id === userObject.id
                               }
                             >
                               Edit
@@ -159,8 +165,8 @@ const Dashboard = () => {
                               variant="danger"
                               onClick={() => deleted(user.id)}
                               disabled={
-                                user.role === "admin" &&
-                                user.id === userObject?.id
+                                user.role === "admin"
+                                // user.id === userObject?.id
                               }
                             >
                               Delete

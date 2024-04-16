@@ -32,3 +32,4 @@ export const fetchUserData = async () => {
     console.error("Error fetching user data:", error);
   }
 };
+  
