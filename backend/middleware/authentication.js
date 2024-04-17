@@ -76,11 +76,8 @@ const authentication = (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      const refreshToken =
-        req.body.refreshToken || req.headers["refresh-token"];
+      const refreshToken = req.body.refreshToken || req.headers["refresh-token"];
 
-      console.log("refreshtokken", refreshToken);
-      console.log("hello-----------");
       if (!refreshToken) {
         return res.status(401).json({
           success: false,
@@ -99,9 +96,15 @@ const authentication = (req, res, next) => {
 
         req.userData = { email: decodedRefreshToken.email };
 
+        // Set the new access token in the response headers
         res.set("Authorization", `Bearer ${newAccessToken}`);
-
-        next();
+        
+        // Return success response with the new access token
+        return res.status(200).json({
+          success: true,
+          message: "New access token generated",
+          token: newAccessToken
+        });
       } catch (refreshError) {
         return res
           .status(401)

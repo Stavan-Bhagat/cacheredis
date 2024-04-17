@@ -14,8 +14,12 @@ const userController = {
         const accessToken = jwt.sign(userData, jwtSecretKey, {
           expiresIn,
         });
-        const expirationTime = Math.floor(Date.now() / 1000) + jwt.decode(accessToken).exp;
-        console.log("Access token expiration time:", new Date(expirationTime * 1000)); // Log expiration time
+        const expirationTime =
+          Math.floor(Date.now() / 1000) + jwt.decode(accessToken).exp;
+        console.log(
+          "Access token expiration time:",
+          new Date(expirationTime * 1000)
+        ); // Log expiration time
         // Generate refresh token
         const refreshToken = jwt.sign({ email: userData.email }, jwtSecretKey);
         res.status(200).json({
@@ -64,15 +68,17 @@ const userController = {
     }
   },
   refreshToken: (req, res) => {
-    const refreshToken = req.body.refreshToken;
+    // const refreshToken = req.body.refreshToken;
+    const refreshToken = req.headers["refresh-token"];
 
+    console.log("inside refreshtoken");
     try {
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-
+      console.log("inside /refresh");
       const newAccessToken = jwt.sign(
         { userId: decoded.userId },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "1m" }
+        { expiresIn: "30s" }
       );
 
       res.status(200).json({ accessToken: newAccessToken });
@@ -80,13 +86,16 @@ const userController = {
       if (error.name === "TokenExpiredError") {
         // Handle expired refresh token separately
         return res.status(401).json({ message: "Refresh token has expired" });
+      } else if (error.name === "JsonWebTokenError") {
+        // Handle invalid token errors
+        return res.status(401).json({ message: "Invalid refresh token" });
       } else {
         // Handle other errors
-        return res.status(401).json({ message: "Invalid refresh token" });
+        console.error("Error refreshing access token:", error);
+        return res.status(500).json({ message: "Internal server error" });
       }
     }
   },
-
 };
 
 module.exports = userController;

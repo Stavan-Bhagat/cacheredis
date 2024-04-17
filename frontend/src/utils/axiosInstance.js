@@ -1,4 +1,3 @@
-
 // import axios from "axios";
 // import { BASEURL } from "../Constant/constant";
 
@@ -31,7 +30,6 @@
 //   }
 // );
 
-
 // axiosInstance.interceptors.response.use(
 //   (response) => {
 
@@ -41,13 +39,12 @@
 //   async (error) => {
 //     console.error("Response Interceptor Error:", error);
 
-    
 //     if (
 //       error.response &&
 //       error.response.status === 401 &&
 //       error.response.data.message === "Invalid access token"
 //     ) {
- 
+
 //       try {
 //         const refreshToken = sessionStorage.getItem("refreshToken");
 //         const refreshResponse = await axios.post(`${BASEURL}/refresh`, {
@@ -97,7 +94,7 @@ axiosInstance.interceptors.request.use(
     }
 
     if (refreshToken) {
-      config.headers['refresh-token'] = refreshToken;
+      config.headers["refresh-token"] = refreshToken;
     }
 
     console.log("Request Interceptor:", config);
@@ -112,10 +109,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log("Response Interceptor:", response);
-
+    console.log("Response Headers:", response.headers); 
     // Update access token in sessionStorage if a new token is received
     if (response.headers.authorization) {
-      const newAccessToken = response.headers.authorization.split(' ')[1];
+      const newAccessToken = response.headers.authorization.split(" ")[1];
+      console.log("res.head.authorizatio new access token");
       sessionStorage.setItem("accessToken", newAccessToken);
     }
 
@@ -134,10 +132,13 @@ axiosInstance.interceptors.response.use(
         if (!refreshToken) {
           throw new Error("No refresh token available");
         }
-
-        const refreshResponse = await axios.post(`${BASEURL}/refresh/refreshtoken`, {
-          refreshToken,
-        });
+        console.log("inside refresh token waiting to send to base url");
+        const refreshResponse = await axios.post(
+          `${BASEURL}/refresh/refreshtoken`,
+          {
+            refreshToken,
+          }
+        );
 
         const newAccessToken = refreshResponse.data.accessToken;
         sessionStorage.setItem("accessToken", newAccessToken);
@@ -154,6 +155,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default axiosInstance;
