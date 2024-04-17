@@ -6,7 +6,7 @@ const userService = {
     try {
       console.log("Login userData:", userData);
       const user = await User.findOne({ email: userData.email });
-      console.log("Userrrrrrrr data:", user);
+      console.log("Userrrrrrrr data:", user); 
 
       if (!user) {
         return { success: false, message: "Login failed" };

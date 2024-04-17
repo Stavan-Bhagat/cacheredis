@@ -86,11 +86,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
     if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers.authorization = `Bearer ${accessToken}`;
     }
 
     if (refreshToken) {
@@ -105,16 +105,18 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-axiosInstance.interceptors.response.use(
+axiosInstance.interceptors.response.use(  
   (response) => {
     console.log("Response Interceptor:", response);
     console.log("Response Headers:", response.headers); 
-    // Update access token in sessionStorage if a new token is received
+    
     if (response.headers.authorization) {
       const newAccessToken = response.headers.authorization.split(" ")[1];
       console.log("res.head.authorizatio new access token");
-      sessionStorage.setItem("accessToken", newAccessToken);
+      localStorage.setItem("accessToken", newAccessToken);
+
+      
+      return axiosInstance.request(response.config);
     }
 
     return response;
@@ -133,15 +135,12 @@ axiosInstance.interceptors.response.use(
           throw new Error("No refresh token available");
         }
         console.log("inside refresh token waiting to send to base url");
-        const refreshResponse = await axios.post(
-          `${BASEURL}/refresh/refreshtoken`,
-          {
-            refreshToken,
-          }
+        const refreshResponse = await axios.get(
+          `${BASEURL}/refresh/refreshtoken`
         );
-
+console.log("refreshRespon se",refreshResponse)
         const newAccessToken = refreshResponse.data.accessToken;
-        sessionStorage.setItem("accessToken", newAccessToken);
+        localStorage.setItem("accessToken", newAccessToken);
 
         // Retry the original request with the new access token
         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -155,5 +154,55 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     console.log("Response Interceptor:", response);
+//     console.log("Response Headers:", response.headers); 
+//     // Update access token in sessionStorage if a new token is received
+//     if (response.headers.authorization) {
+//       const newAccessToken = response.headers.authorization.split(" ")[1];
+//       console.log("res.head.authorizatio new access token");
+//       sessionStorage.setItem("accessToken", newAccessToken);
+//     }
+
+//     return response;
+//   },
+//   async (error) => {
+//     console.error("Response Interceptor Error:", error);
+
+//     if (
+//       error.response &&
+//       error.response.status === 401 &&
+//       error.response.data.message === "Invalid access token"
+//     ) {
+//       try {
+//         const refreshToken = sessionStorage.getItem("refreshToken");
+//         if (!refreshToken) {
+//           throw new Error("No refresh token available");
+//         }
+//         console.log("inside refresh token waiting to send to base url");
+//         const refreshResponse = await axios.post(
+//           `${BASEURL}/refresh/refreshtoken`,
+//           {
+//             refreshToken,
+//           }
+//         );
+
+//         const newAccessToken = refreshResponse.data.accessToken;
+//         sessionStorage.setItem("accessToken", newAccessToken);
+
+//         // Retry the original request with the new access token
+//         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+//         return axiosInstance.request(error.config);
+//       } catch (refreshError) {
+//         console.error("Error refreshing access token:", refreshError);
+//         return Promise.reject(error);
+//       }
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );
 
 export default axiosInstance;

@@ -57,8 +57,9 @@ function SignIn() {
       // );
       console.log("res", response.data);
       const { success, message,accessToken,refreshToken, user } = response.data;
-      // const token = response.data.token;
-      sessionStorage.setItem("accessToken", accessToken);
+      // const { success, message,accessToken, user } = response.data;
+      // const token = response.data.token; 
+      localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken",refreshToken);
       if (success) {
         dispatch(loginSuccess(user));
