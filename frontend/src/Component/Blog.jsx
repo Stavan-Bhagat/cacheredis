@@ -11,6 +11,7 @@ import {
   Table,
 } from "react-bootstrap";
 import "../css/dashboard.css";
+import axiosInstance from "../utils/axiosInstance";
 import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -28,7 +29,7 @@ const Blog = () => {
   const userRole = user.role;
   const [role, setRole] = useState(userRole);
   const [formData, setFormData] = useState({
-    id: "",
+    // id: "",
     title: "",
     description: "",
   });
@@ -69,8 +70,8 @@ const Blog = () => {
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(BLOG_API, formData);
-      fetchBlogData(setBlog); 
+      await axiosInstance.post("/blog/addblogdata",formData);
+      fetchBlogData(); 
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding blog:", error);
@@ -102,7 +103,13 @@ const Blog = () => {
     }
   };
   useEffect(() => {
-    fetchBlogData(setBlog);
+    fetchBlogData()
+      .then((result) => {
+        setBlog(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
   }, []);
 
   return (

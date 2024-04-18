@@ -15,12 +15,20 @@ export const BLOG_API = `${API_URL}/blog`;
 //   }
 // };
 
-export const fetchBlogData = async (setBlog) => {
+// export const fetchBlogData = async (setBlog) => {
+//   try {
+//     const response = await axiosInstance.get(`/`);
+//     setBlog(response.data);
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//   }
+// };
+export const fetchBlogData = async () => {
   try {
-    const response = await axiosInstance.get(`/`);
-    setBlog(response.data);
+    const response = await axiosInstance.get(`/blog/getblogdata`);
+    return response.data;   
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching user data:", error);
   }
 };
 

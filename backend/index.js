@@ -2,6 +2,7 @@ const express = require("express");
 const database = require("./Connection/connection");
 const cors = require("cors");
 const userRoutes = require("./Routes/userRoutes");
+const blogRoutes = require("./Routes/userRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -13,6 +14,7 @@ database();
 app.use(express.json());
 app.use(cors({ origin: corsOrigin }));
 app.use("/submit", userRoutes);
+app.use("/blog", blogRoutes);
 app.use("/refresh", userRoutes);
 app.use("/", (req, res) => {
   res.send("demo api");
