@@ -1,8 +1,8 @@
 const express = require("express");
 const database = require("./Connection/connection");
 const cors = require("cors");
-const userRoutes = require('./Routes/userRoutes');
-require('dotenv').config();
+const userRoutes = require("./Routes/userRoutes");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT;
@@ -13,12 +13,10 @@ database();
 app.use(express.json());
 app.use(cors({ origin: corsOrigin }));
 app.use("/submit", userRoutes);
-// app.use("/refresh", userRoutes);
+app.use("/refresh", userRoutes);
 app.use("/", (req, res) => {
-  res.send("demo api")
+  res.send("demo api");
 });
-
-
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
