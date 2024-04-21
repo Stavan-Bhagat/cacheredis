@@ -9,17 +9,16 @@ import {
   Modal,
   Form,
   Table,
-  Card,
 } from "react-bootstrap";
 import "../css/dashboard.css";
 import axiosInstance from "../utils/axiosInstance";
 import Sidebar from "./Sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";   
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import { BLOG_API, fetchBlogData } from "../Services/services";
 import { REMOVE_SESSION_USER } from "../Constant/constant";
-import "../css/blog.css";
+
 const Blog = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
@@ -30,29 +29,20 @@ const Blog = () => {
   const userRole = user.role;
   const [role, setRole] = useState(userRole);
   const [formData, setFormData] = useState({
+    // id: "",
     title: "",
     description: "",
-    image: null, // Added state to store selected file
   });
 
   const handleCloseAddModal = () => setShowAddModal(false);
   const handleCloseUpdateModal = () => setShowUpdateModal(false);
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    // If the input is a file input, update the image state
-    if (name === "image") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        image: files[0], // Store the first selected file
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
-
   const handleLogout = () => {
     dispatch(logout(false));
     REMOVE_SESSION_USER();
@@ -64,7 +54,6 @@ const Blog = () => {
     setFormData({
       title: "",
       description: "",
-      image: null,
     });
   };
 
@@ -74,7 +63,6 @@ const Blog = () => {
       id: matchedBlog.id,
       title: matchedBlog.title,
       description: matchedBlog.description,
-      image: null,
     });
     setShowUpdateModal(true);
   };
@@ -82,13 +70,8 @@ const Blog = () => {
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("title", formData.title);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
-
-      await axiosInstance.post("/blog/addblogdata", formDataToSend);
-      fetchBlogData();
+      await axiosInstance.post("/blog/addblogdata",formData);
+      fetchBlogData(); 
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding blog:", error);
@@ -98,13 +81,8 @@ const Blog = () => {
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("title", formData.title);
-      formDataToSend.append("description", formData.description);
-      formDataToSend.append("image", formData.image);
-
-      await axios.patch(`${BLOG_API}/${formData.id}`, formDataToSend);
-      fetchBlogData(setBlog);
+      await axios.patch(`${BLOG_API}/${formData.id}`, formData);
+      fetchBlogData(setBlog); 
       setShowUpdateModal(false);
     } catch (error) {
       console.error("Error updating blog:", error);
@@ -115,15 +93,8 @@ const Blog = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
       try {
-        await axiosInstance.delete(`blog/deleteblogdata?id=${id}`);
-
-        fetchBlogData()
-          .then((result) => {
-            setBlog(result);
-          })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-          });
+        await axios.delete(`${BLOG_API}/${id}`);
+        setBlog(blog.filter((blog) => blog.id !== id));
       } catch (error) {
         console.error("Error deleting blog:", error);
       }
@@ -135,7 +106,6 @@ const Blog = () => {
     fetchBlogData()
       .then((result) => {
         setBlog(result);
-
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -160,73 +130,6 @@ const Blog = () => {
         <Row>
           <Sidebar />
           <Col sm={10}>
-            <section className="mt-3">
-              <div className="addBlog text-center">
-                <h3 className="d-inline-block text-light ">{userRole} Panel</h3>
-                {role === "admin" && (
-                  <Button
-                    className="float-end rounded-0"
-                    variant="primary"
-                    onClick={handleShowAddModal}
-                  >
-                    Add Blog
-                  </Button>
-                )}
-              </div>
-              <div className="container">
-                {blog.map((blogPost, index) => (
-                //   <Card key={blogPost.id} className="mb-3 card">
-                //   {/* Assuming `blogPost.image` contains the binary image data */}
-                //   <Card.Img
-                //     variant="top"
-                //     src=""                   // src={`data:${blogPost.contentType};base64,${blogPost.image.toString('base64')}`}
-                //     className="blog-image"
-                //   />
-                //   <Card.Body>
-                //     <Card.Title className="headerText">
-                //       {blogPost.title}
-                //     </Card.Title>
-                //     <Card.Text>{blogPost.description}</Card.Text>
-                //     {/* Your other card content */}
-                //   </Card.Body>
-                // </Card>
-                  <Card key={blogPost.id} className="mb-3 card">
-                    <Card.Img
-                      variant="top"
-                      src={blogPost.image}
-                      className="blog-image"
-                      id="blog-image"
-                    />
-                    <Card.Body>
-                      <Card.Title className="headerText">
-                        {blogPost.title}
-                      </Card.Title>
-                      <Card.Text>{blogPost.description}</Card.Text>
-               {console.log(blogPost.image)}
-                      {role === "admin" && (
-                        <div className="d-flex justify-content-end">
-                          <Button
-                            variant="warning"
-                            onClick={() => handleShowUpdateModal(blogPost.id)}
-                            className="me-2"
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="danger"
-                            onClick={() => handleDelete(blogPost._id)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      )}
-                    </Card.Body>
-                  </Card>
-                ))}
-              </div>
-            </section>{" "}
-          </Col>
-          {/* <Col sm={10}>
             <section className="mt-3">
               <div className="addBlog text-center">
                 <h3 className="d-inline-block text-light ">{userRole} Panel</h3>
@@ -269,7 +172,7 @@ const Blog = () => {
                           <td>
                             <Button
                               variant="danger"
-                              onClick={() => handleDelete(blog._id)}
+                              onClick={() => handleDelete(blog.id)}
                             >
                               Delete
                             </Button>
@@ -300,7 +203,7 @@ const Blog = () => {
                 )}
               </div>
             </section>{" "}
-          </Col> */}
+          </Col>
         </Row>
       </Container>
 
@@ -330,10 +233,6 @@ const Blog = () => {
                 value={formData.description}
                 onChange={handleChange}
               />
-            </Form.Group>
-            <Form.Group controlId="formGridImage">
-              <Form.Label className="modalLabel">Image</Form.Label>
-              <Form.Control type="file" name="image" onChange={handleChange} />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -373,10 +272,6 @@ const Blog = () => {
                 onChange={handleChange}
               />
             </Form.Group>
-            <Form.Group controlId="formGridImage">
-              <Form.Label className="modalLabel">Image</Form.Label>
-              <Form.Control type="file" name="image" onChange={handleChange} />
-            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -392,5 +287,4 @@ const Blog = () => {
     </>
   );
 };
-
 export default Blog;

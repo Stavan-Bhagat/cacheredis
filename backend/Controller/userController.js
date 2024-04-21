@@ -9,7 +9,7 @@ const userController = {
       console.log(email, password);
       const userData = await userService.login({ email, password });
       if (userData.success) {
-        const expiresIn = "300s";
+        const expiresIn = "15m";
         const email = userData.user.email;
         const accessToken = jwt.sign({ email }, jwtSecretKey, {
           expiresIn,
@@ -23,9 +23,9 @@ const userController = {
 
         // Generate refresh token
         const refreshToken = jwt.sign(
-          { email: userData.user.email }, 
+          { email: userData.user.email },
           jwtSecretKey,
-          { expiresIn: "15m" }
+          { expiresIn: "30m" }
         );
         res.status(200).json({
           success: true,
@@ -81,7 +81,7 @@ const userController = {
       const newAccessToken = jwt.sign(
         { email: decoded.email },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "300s" }
+        { expiresIn: "15m" }
       );
 
       // Send the new access token in the response

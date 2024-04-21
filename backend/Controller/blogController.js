@@ -20,15 +20,18 @@ const blogController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+
   getBlogData: async (req, res) => {
     try {
       const blogData = await blogService.getBlogData();
+      console.log("dataaaaaaaaaa",blogData);
       res.status(200).json(blogData);
     } catch (error) {
-      console.error(`getblogData controller error : ${error}`);
+      console.error("Error fetching blog data:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   },
+
   deleteBlogData: async (req, res) => {
     try {
       const { id } = req.query;

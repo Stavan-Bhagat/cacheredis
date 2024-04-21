@@ -1,0 +1,70 @@
+/* styles.css */
+
+/* Header styles */
+#blog-image{
+  width: 40%;
+  height: auto;
+}
+.blog-image{
+  width: 40%;
+  height: auto;
+}
+#blog-image{
+  width: 40%;
+  height: auto;
+}
+.header {
+    background-color: #464866;
+  }
+  
+  .headerText {
+    text-align: center;
+    color: #ffffff; /* White text color */
+    padding: 1%;
+  }
+  
+  /* Modal title styles */
+  .modalTitle {
+    background-color: #6c5b7b;
+    color: aliceblue;
+  }
+  
+  /* Add Blog button styles */
+  .card{
+    border: 1px solid #ccc;
+    background-color: #40447d;
+  }
+  
+  /* Blog post card styles */
+  .card {
+    margin-bottom: 1.25rem; /* Equivalent to 20px */
+  }
+  
+  .card-body {
+ 
+    border-radius: 0.3125rem; /* Equivalent to 5px */
+    padding: 1.25rem; /* Equivalent to 20px */
+  }
+  
+  .card-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.625rem; /* Equivalent to 10px */
+  }
+  
+  .card-img {
+    width: 6.25rem; /* Equivalent to 100px */
+    height: 6.25rem; /* Equivalent to 100px */
+    border-radius: 50%;
+    margin-right: 1.25rem; /* Equivalent to 20px */
+  }
+  
+  .admin-controls {
+    margin-top: 0.625rem; /* Equivalent to 10px */
+  }
+  
+  /* Adjust button styles as needed */
+  .admin-controls button {
+    margin-right: 0.625rem; /* Equivalent to 10px */
+  }
+  

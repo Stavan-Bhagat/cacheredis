@@ -1,12 +1,10 @@
 import axios from "axios";
 import { BASEURL } from "../Constant/constant";
 import { logout } from "../store/authSlice";
-import store from "../store/store"; 
+import store from "../store/store";
+
 const axiosInstance = axios.create({
   baseURL: BASEURL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 axiosInstance.interceptors.request.use(
