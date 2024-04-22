@@ -30,7 +30,7 @@ const blogService = {
   //   try {
   //     // Query all blog documents from the database
   //     const blogData = await Blog.find({});
-      
+
   //     // Decode Base64 image data back to binary format
   //     const decodedBlogData = blogData.map(blog => {
   //       const decodedImageData = Buffer.from(blog.image, 'base64');
@@ -39,7 +39,7 @@ const blogService = {
   //         image: decodedImageData,
   //       };
   //     });
-      
+
   //     return decodedBlogData;
   //   } catch (error) {
   //     console.error("Error fetching blog data:", error);
@@ -47,28 +47,29 @@ const blogService = {
   //   }
   // },
   getBlogData: async () => {
-  //   try {
-  //     // Query all blog documents from the database
-  //     const blogData = await Blog.find({});
-  //     return blogData;
-  //   } catch (error) {
-  //     console.error("Error fetching blog data:", error);
-  //     throw error;
-  //   }
-  // },
+    //   try {
+    //     // Query all blog documents from the database
+    //     const blogData = await Blog.find({});
+    //     return blogData;
+    //   } catch (error) {
+    //     console.error("Error fetching blog data:", error);
+    //     throw error;
+    //   }
+    // },
     try {
       const blogData = await Blog.find({});
-      const blogsWithImageData = blogData.map(blog => {
+      const blogsWithImageData = blogData.map((blog) => {
         return {
           ...blog.toJSON(),
-          imageData: Buffer.from(blog.image.buffer).toString('base64') // Convert binary data to Base64
+          imageData: Buffer.from(blog.image.buffer).toString("base64"), // Convert binary data to Base64
         };
       });
       return blogsWithImageData;
     } catch (error) {
       console.error("Error fetching blog data:", error);
       throw error;
-    }},
+    }
+  },
 
   deleteBlogData: async (id) => {
     try {
@@ -83,16 +84,14 @@ const blogService = {
   updateBlogData: async (id, title, description, image) => {
     try {
       let updateFields = { title, description };
-      console.log("imggggggggg1",image)
+      console.log("imggggggggg1", image);
       if (image) {
         updateFields.image = image;
       }
-      
-      const updatedBlogData = await Blog.findByIdAndUpdate(
-        id,
-        updateFields,
-        { new: true }
-      );
+
+      const updatedBlogData = await Blog.findByIdAndUpdate(id, updateFields, {
+        new: true,
+      });
       console.log("Updated blog data:", updatedBlogData);
       return updatedBlogData;
     } catch (error) {
@@ -100,6 +99,5 @@ const blogService = {
       throw error;
     }
   },
-  
 };
 module.exports = blogService;

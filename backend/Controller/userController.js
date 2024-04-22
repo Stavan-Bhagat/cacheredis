@@ -80,7 +80,7 @@ const userController = {
         name,
         email,
         password,
-        role
+        role,
       });
 
       res.status(200).json(updateBlogData);

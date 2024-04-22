@@ -13,12 +13,12 @@ export const REMOVE_SESSION_USER = () => {
 export const REMOVE_IS_LOGIN = () => {
   sessionStorage.removeItem("isLogin");
 };
-export const SET_IS_LOGIN=(value)=>{
-  sessionStorage.setItem("isLogin",value);
-}
-export const SET_NAME=(value)=>{
-  sessionStorage.setItem("name",value);
-}
-export const REACT_PORT=3000
-export const  BASEURL="http://localhost:5000/"
-// config=
+export const SET_IS_LOGIN = (value) => {
+  sessionStorage.setItem("isLogin", value);
+};
+export const SET_NAME = (value) => {
+  sessionStorage.setItem("name", value);
+};
+export const REACT_PORT = 3000;
+export const BASEURL = "http://localhost:5000/";
+

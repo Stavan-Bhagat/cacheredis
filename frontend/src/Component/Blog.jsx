@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Loader from "react-loader-spinner";
-import axios from "axios";
+import { MutatingDots } from "react-loader-spinner";
 import {
   Col,
   Row,
@@ -9,7 +8,6 @@ import {
   Button,
   Modal,
   Form,
-  Table,
   Card,
 } from "react-bootstrap";
 import "../css/dashboard.css";
@@ -18,7 +16,7 @@ import Sidebar from "./Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
-import { BLOG_API, fetchBlogData } from "../Services/services";
+import { fetchBlogData } from "../Services/services";
 import { REMOVE_SESSION_USER } from "../Constant/constant";
 import "../css/blog.css";
 
@@ -190,6 +188,16 @@ const Blog = () => {
         console.error("Error fetching user data:", error);
       });
   }, []);
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader-wrapper">
+          <MutatingDots type="Bars" color="#00BFFF" height={80} width={80} />
+          <h3 className="text-white">Loading</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -6,27 +6,10 @@ const API_URL = `http://localhost:${PORT}`;
 export const USER_API = `${API_URL}/users`;
 export const BLOG_API = `${API_URL}/blog`;
 
-// export const fetchUserData = async (setUsers) => {
-//   try {
-//     const response = await axios.get(USER_API);
-//     setUsers(response.data);
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//   }
-// };
-
-// export const fetchBlogData = async (setBlog) => {
-//   try {
-//     const response = await axiosInstance.get(`/`);
-//     setBlog(response.data);
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//   }
-// };
 export const fetchBlogData = async () => {
   try {
     const response = await axiosInstance.get(`/blog/getblogdata`);
-    return response.data;   
+    return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
@@ -35,9 +18,8 @@ export const fetchBlogData = async () => {
 export const fetchUserData = async () => {
   try {
     const response = await axiosInstance.get(`/submit/userdata`);
-    return response.data;   
+    return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 };
-  

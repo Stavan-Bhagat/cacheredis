@@ -10,7 +10,7 @@ const blogController = {
       }
 
       const { title, description } = req.body;
-      console.log("title",title,"descripiton",description)
+      console.log("title", title, "descripiton", description);
       const newBlog = await blogService.addBlog(
         { title, description },
         req.file
@@ -25,8 +25,8 @@ const blogController = {
   getBlogData: async (req, res) => {
     try {
       const blogData = await blogService.getBlogData();
-      console.log("dataaaaaaaaaa",blogData);
-      res.status(200).json(blogData); 
+      console.log("dataaaaaaaaaa", blogData);
+      res.status(200).json(blogData);
     } catch (error) {
       console.error("Error fetching blog data:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -45,31 +45,28 @@ const blogController = {
     }
   },
   updateBlogData: async (req, res) => {
-    console.log("reqqqqqqqqqqqqqqqq"
-    ,req.body)
+    console.log("reqqqqqqqqqqqqqqqq", req.body);
     try {
       const { id, title, description } = req.body;
-  
-  
+
       // Check if there's a file uploaded
       let image;
       if (req.file) {
         image = req.file.buffer; // Access the image buffer
       }
-  
+
       const updateBlogData = await blogService.updateBlogData(
         id,
         title,
         description,
         image // Pass the image buffer to the service function
       );
-  
+
       res.status(200).json(updateBlogData);
     } catch (error) {
       console.error(`updateBlogData controller error : ${error}`);
       res.status(500).json({ error: "Internal server error" });
     }
   },
-  
 };
 module.exports = blogController;

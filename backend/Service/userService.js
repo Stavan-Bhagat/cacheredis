@@ -6,7 +6,7 @@ const userService = {
     try {
       console.log("Login userData:", userData);
       const user = await User.findOne({ email: userData.email });
-      console.log("Userrrrrrrr data:", user); 
+      console.log("Userrrrrrrr data:", user);
 
       if (!user) {
         return { success: false, message: "Login failed" };
@@ -68,11 +68,9 @@ const userService = {
   updateUserData: async ({ id, name, email, password, role }) => {
     try {
       let updateFields = { name, email, password, role };
-      const updatedUserData = await User.findByIdAndUpdate(
-        id,
-        updateFields,
-        { new: true }
-      );
+      const updatedUserData = await User.findByIdAndUpdate(id, updateFields, {
+        new: true,
+      });
       return updatedUserData;
     } catch (error) {
       console.error("Error updating user data:", error);

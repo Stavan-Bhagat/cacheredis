@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
@@ -20,7 +19,7 @@ const authentication = async (req, res, next) => {
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       // Return 419 error if token is expired
-      console.log("419 419 419 419 419 419 419")
+      console.log("419 419 419 419 419 419 419");
       return res.status(419).json({ success: false, message: "Token expired" });
     } else {
       return res
@@ -34,7 +33,7 @@ module.exports = authentication;
 
 // const jwt = require("jsonwebtoken");
 // const jwtSecretKey = process.env.JWT_SECRET_KEY;
-// const userController = require('../Controller/userController'); 
+// const userController = require('../Controller/userController');
 // const authentication = async(req, res, next) => {
 //   const accessToken = req.headers.authorization?.split(" ")[1];
 
@@ -55,7 +54,7 @@ module.exports = authentication;
 //       // Trigger the refreshToken endpoint
 //       // return userController.refreshToken(req, res);
 //       await userController.refreshToken(req, res);
-        
+
 //       next();
 //     } else {
 //       return res
@@ -65,12 +64,10 @@ module.exports = authentication;
 //   }
 // };
 
-// module.exports = authentication;  
-  
-  
-  
-  // const jwt = require("jsonwebtoken");
-  // const jwtSecretKey = process.env.JWT_SECRET_KEY;
+// module.exports = authentication;
+
+// const jwt = require("jsonwebtoken");
+// const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 // const authentication = (req, res, next) => {
 //   const accessToken = req.headers.authorization?.split(" ")[1];
@@ -134,9 +131,6 @@ module.exports = authentication;
 // };
 
 // module.exports = authentication;
-
-
-
 
 // const authentication = (req, res, next) => {
 //   const accessToken = req.headers.authorization?.split(" ")[1];

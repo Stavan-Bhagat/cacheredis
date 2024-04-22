@@ -1,15 +1,4 @@
-// import "./App.css";
-// import SignIn from "./Component/SignIn";
-// import SignUp from "./Component/SignUp";
-// import { BrowserRouter as Router, Route, Routes ,useNavigate} from "react-router-dom";
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import Blog from "./Component/Blog";
-// import Dashboard from "./Component/Dashboard";
-// import { Provider, useSelector } from "react-redux";
-// import store from "./store/store";
-// import { useEffect } from "react";
 
-// import "./App.css";
 import React from "react";
 import {
   BrowserRouter as Router,

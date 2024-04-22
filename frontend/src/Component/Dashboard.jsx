@@ -7,6 +7,7 @@ import {
   Col,
   Row,
   Container,
+  Image,
 } from "react-bootstrap";
 import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
@@ -22,10 +23,10 @@ import {
   REMOVE_IS_LOGIN,
 } from "../Constant/constant";
 import axiosInstance from "../utils/axiosInstance";
+import welcomeImage from "../image/welcome.jpg";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
   const userObject = GET_SESSION_USER();
   const userRole = userObject ? userObject.role : null;
 
@@ -164,13 +165,13 @@ const Dashboard = () => {
                           <td>{user.email}</td>
                           <td>{user.role}</td>
                           <td>
-                            {console.log("userrrrrrrrrrrrrrr",user)}
+                            {console.log("userrrrrrrrrrrrrrr", user)}
                             <Button
                               variant="warning"
                               onClick={() => handleShow(user._id)}
                               disabled={
-                                user.role === "admin"
-                                && user._id === userObject?._id
+                                user.role === "admin" &&
+                                user._id === userObject?._id
                               }
                             >
                               Edit
@@ -181,8 +182,8 @@ const Dashboard = () => {
                               variant="danger"
                               onClick={() => deleted(user._id)}
                               disabled={
-                                user.role === "admin"
-                               && user._id === userObject?._id
+                                user.role === "admin" &&
+                                user._id === userObject?._id
                               }
                             >
                               Delete
@@ -194,10 +195,15 @@ const Dashboard = () => {
                   </Table>
                 ) : (
                   <Container className="text-white ">
-                    <h4>
+                    {/* <h4>
                       Welcome to user
                       <span className="text-danger">Dashboard</span> section
-                    </h4>
+                    </h4> */}
+                    <Image
+                      src={welcomeImage}
+                      alt="welcome"
+                      style={{ width: "100%", height: "75vh" }}
+                    />
                   </Container>
                 )}
               </div>
