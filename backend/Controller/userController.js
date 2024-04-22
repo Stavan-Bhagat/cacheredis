@@ -71,7 +71,35 @@ const userController = {
       res.status(500).json({ error: "Internal server error" });
     }
   },
+  updateUserData: async (req, res) => {
+    try {
+      const { id } = req.query;
+      const { name, email, password, role } = req.body;
+      const updateBlogData = await userService.updateUserData({
+        id,
+        name,
+        email,
+        password,
+        role
+      });
 
+      res.status(200).json(updateBlogData);
+    } catch (error) {
+      console.error(`updateBlogData controller error : ${error}`);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+  deleteUserData: async (req, res) => {
+    try {
+      const { id } = req.query;
+      console.log("iddddd", id);
+      const blogData = await userService.deleteUserData(id);
+      res.status(200).json(blogData);
+    } catch (error) {
+      console.error(`deleteUserdata controller error : ${error}`);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
   refreshToken: (req, res) => {
     const refreshToken = req.headers["refresh-token"];
 

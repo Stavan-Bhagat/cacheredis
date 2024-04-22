@@ -19,14 +19,15 @@
   
   .headerText {
     text-align: center;
-    color: #ffffff; /* White text color */
+    color: #FFFFFF ;/* White text color */
+    text-shadow: 2px 2px 4px rgba(0, 5, 5, 0.5);
     padding: 1%;
   }
   
   /* Modal title styles */
   .modalTitle {
     background-color: #6c5b7b;
-    color: aliceblue;
+  
   }
   
   /* Add Blog button styles */
@@ -67,4 +68,6 @@
   .admin-controls button {
     margin-right: 0.625rem; /* Equivalent to 10px */
   }
-  
+  .textBody{
+    color:#bdbdbd;
+  }

@@ -55,6 +55,30 @@ const userService = {
       throw error;
     }
   },
+  deleteUserData: async (id) => {
+    try {
+      const deleteUserData = await User.findByIdAndDelete(id);
+      console.log("userdata-----------------", deleteUserData);
+      return deleteUserData;
+    } catch (error) {
+      console.log("getting blog Data error ", error);
+      throw error;
+    }
+  },
+  updateUserData: async ({ id, name, email, password, role }) => {
+    try {
+      let updateFields = { name, email, password, role };
+      const updatedUserData = await User.findByIdAndUpdate(
+        id,
+        updateFields,
+        { new: true }
+      );
+      return updatedUserData;
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      throw error;
+    }
+  },
 };
 
 module.exports = userService;

@@ -21,6 +21,7 @@ import {
   REMOVE_SESSION_USER,
   REMOVE_IS_LOGIN,
 } from "../Constant/constant";
+import axiosInstance from "../utils/axiosInstance";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const Dashboard = () => {
   }, []);
 
   const handleShow = (id) => {
-    const user = users.find((user) => user.id === id);
+    const user = users.find((user) => user._id === id);
     console.log("User:", user);
     setFormData(user);
     setId(id);
@@ -82,10 +83,18 @@ const Dashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const responsePost = await axios.patch(`${USER_API}/${id}`, formData);
+      const responsePost = await axiosInstance.patch(
+        `submit/updateuserdata?id=${id}`,
+        formData
+      );
       console.log("Data successfully updated:", responsePost.data);
-      const response = await axios.get(USER_API);
-      setUsers(response.data);
+      fetchUserData()
+        .then((result) => {
+          setUsers(result);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
       setShow(false);
     } catch (error) {
       console.error("Error updating data:", error);
@@ -96,9 +105,15 @@ const Dashboard = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
       try {
-        await axios.delete(`${USER_API}/${userId}`);
+        await axiosInstance.delete(`submit/deleteuserdata?id=${userId}`);
         console.log(`User deleted with ID ${userId}`);
-        setUsers(users.filter((user) => user.id !== userId));
+        fetchUserData()
+          .then((result) => {
+            setUsers(result);
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          });
       } catch (error) {
         console.error("Error deleting user:", error);
       }
@@ -149,12 +164,13 @@ const Dashboard = () => {
                           <td>{user.email}</td>
                           <td>{user.role}</td>
                           <td>
+                            {console.log("userrrrrrrrrrrrrrr",user)}
                             <Button
                               variant="warning"
-                              onClick={() => handleShow(user.id)}
+                              onClick={() => handleShow(user._id)}
                               disabled={
                                 user.role === "admin"
-                                //&& user.id === userObject.id
+                                && user._id === userObject?._id
                               }
                             >
                               Edit
@@ -163,10 +179,10 @@ const Dashboard = () => {
                           <td>
                             <Button
                               variant="danger"
-                              onClick={() => deleted(user.id)}
+                              onClick={() => deleted(user._id)}
                               disabled={
                                 user.role === "admin"
-                                // user.id === userObject?.id
+                               && user._id === userObject?._id
                               }
                             >
                               Delete

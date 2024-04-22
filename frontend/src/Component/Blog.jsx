@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loader from "react-loader-spinner";
 import axios from "axios";
 import {
   Col,
@@ -20,11 +21,13 @@ import { logout } from "../store/authSlice";
 import { BLOG_API, fetchBlogData } from "../Services/services";
 import { REMOVE_SESSION_USER } from "../Constant/constant";
 import "../css/blog.css";
+
 const Blog = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const [showAddModal, setShowAddModal] = useState(false);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [blog, setBlog] = useState([]);
   const userRole = user.role;
@@ -180,6 +183,7 @@ const Blog = () => {
   useEffect(() => {
     fetchBlogData()
       .then((result) => {
+        setLoading(false);
         setBlog(result);
       })
       .catch((error) => {
@@ -220,21 +224,6 @@ const Blog = () => {
               </div>
               <div className="container">
                 {blog.map((blogPost, index) => (
-                  //   <Card key={blogPost.id} className="mb-3 card">
-                  //   {/* Assuming `blogPost.image` contains the binary image data */}
-                  //   <Card.Img
-                  //     variant="top"
-                  //     src=""                   // src={`data:${blogPost.contentType};base64,${blogPost.image.toString('base64')}`}
-                  //     className="blog-image"
-                  //   />
-                  //   <Card.Body>
-                  //     <Card.Title className="headerText">
-                  //       {blogPost.title}
-                  //     </Card.Title>
-                  //     <Card.Text>{blogPost.description}</Card.Text>
-                  //     {/* Your other card content */}
-                  //   </Card.Body>
-                  // </Card>
                   <Card key={blogPost.id} className="mb-3 card">
                     <Card.Img
                       variant="top"
@@ -247,7 +236,9 @@ const Blog = () => {
                       <Card.Title className="headerText">
                         {blogPost.title}
                       </Card.Title>
-                      <Card.Text>{blogPost.description}</Card.Text>
+                      <Card.Text className="textBody">
+                        {blogPost.description}
+                      </Card.Text>
 
                       {role === "admin" && (
                         <div className="d-flex justify-content-end">
@@ -272,81 +263,6 @@ const Blog = () => {
               </div>
             </section>{" "}
           </Col>
-          {/* <Col sm={10}>
-            <section className="mt-3">
-              <div className="addBlog text-center">
-                <h3 className="d-inline-block text-light ">{userRole} Panel</h3>
-                {role === "admin" && (
-                  <Button
-                    className="float-end rounded-0"
-                    variant="primary"
-                    onClick={handleShowAddModal}
-                  >
-                    Add Blog
-                  </Button>
-                )}
-              </div>
-              <div className="container">
-                {role === "admin" ? (
-                  <Table striped responsive>
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody className="tableBody">
-                      {blog.map((blog, index) => (
-                        <tr key={blog.id}>
-                          <td>{index + 1}</td>
-                          <td>{blog.title}</td>
-                          <td>{blog.description}</td>
-                          <td>
-                            <Button
-                              variant="warning"
-                              onClick={() => handleShowUpdateModal(blog.id)}
-                            >
-                              Edit
-                            </Button>
-                          </td>
-                          <td>
-                            <Button
-                              variant="danger"
-                              onClick={() => handleDelete(blog._id)}
-                            >
-                              Delete
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                ) : (
-                  <Table striped responsive>
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                      </tr>
-                    </thead>
-                    <tbody className="tableBody">
-                      {blog.map((blog, index) => (
-                        <tr key={blog.id}>
-                          <td>{index + 1}</td>
-                          <td>{blog.title}</td>
-                          <td>{blog.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                )}
-              </div>
-            </section>{" "}
-          </Col> */}
         </Row>
       </Container>
 

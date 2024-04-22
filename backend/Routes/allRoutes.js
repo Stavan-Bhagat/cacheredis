@@ -10,6 +10,8 @@ const upload = require('../config/multerConfig');
 // User routes
 router.post('/register', userController.register);
 router.post('/login', userController.login);
+router.patch('/updateuserdata', userController.updateUserData);
+router.delete('/deleteuserdata', userController.deleteUserData);
 router.get('/userdata', authentication, userController.getUserData); 
 // blog routes
 router.get('/getblogdata', authentication, blogController.getBlogData); 
