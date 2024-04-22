@@ -15,7 +15,7 @@ router.get('/userdata', authentication, userController.getUserData);
 router.get('/getblogdata', authentication, blogController.getBlogData); 
 router.post('/addblogdata',upload.single("image"), blogController.addBlogData); 
 router.delete('/deleteblogdata', blogController.deleteBlogData); 
-router.patch('/updateblogdata', blogController.updateBlogData); 
+router.patch('/updateblogdata',upload.single("image"), blogController.updateBlogData); 
 
 //refresh
 router.get('/refreshtoken', userController.refreshToken);

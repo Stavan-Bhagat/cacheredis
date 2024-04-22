@@ -80,11 +80,17 @@ const blogService = {
       throw error;
     }
   },
-  updateBlogData: async (id, title, description) => {
+  updateBlogData: async (id, title, description, image) => {
     try {
+      let updateFields = { title, description };
+      console.log("imggggggggg1",image)
+      if (image) {
+        updateFields.image = image;
+      }
+      
       const updatedBlogData = await Blog.findByIdAndUpdate(
         id,
-        { title, description },
+        updateFields,
         { new: true }
       );
       console.log("Updated blog data:", updatedBlogData);
@@ -94,5 +100,6 @@ const blogService = {
       throw error;
     }
   },
+  
 };
 module.exports = blogService;

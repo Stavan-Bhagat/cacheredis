@@ -69,15 +69,27 @@ const Blog = () => {
   };
 
   const handleShowUpdateModal = (id) => {
-    const matchedBlog = blog.find((blog) => blog.id === id);
+    const matchedBlog = blog.find((blog) => blog._id === id);
+    console.log("matchblogid", matchedBlog._id);
     setFormData({
-      id: matchedBlog.id,
+      id: matchedBlog._id,
       title: matchedBlog.title,
       description: matchedBlog.description,
       image: null,
     });
     setShowUpdateModal(true);
   };
+  // const handleShowUpdateModal = (id) => {
+  //   const matchedBlog = blog.find((blogPost) => blogPost._id === id); // Change blogPost.id to blogPost._id
+  //   setFormData({
+  //     ...formData,
+  //     id: matchedBlog._id,
+  //     title: matchedBlog.title,
+  //     description: matchedBlog.description,
+  //     image: null,
+  //   });
+  //   setShowUpdateModal(true);
+  // };
 
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
@@ -86,30 +98,64 @@ const Blog = () => {
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("image", formData.image);
-
       await axiosInstance.post("/blog/addblogdata", formDataToSend);
-      fetchBlogData();
+      fetchBlogData()
+        .then((result) => {
+          setBlog(result);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding blog:", error);
     }
   };
-
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
+      formDataToSend.append("id", formData.id);
       formDataToSend.append("title", formData.title);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("image", formData.image);
 
-      await axios.patch(`${BLOG_API}/${formData.id}`, formDataToSend);
-      fetchBlogData(setBlog);
+      await axiosInstance.patch("/blog/updateblogdata", formDataToSend);
+
+      fetchBlogData()
+        .then((result) => {
+          setBlog(result);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
       setShowUpdateModal(false);
     } catch (error) {
       console.error("Error updating blog:", error);
     }
   };
+  // const handleSubmitUpdate = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const formDataToSend = new FormData();
+  //     formDataToSend.append("id", formData._id); // Add id to the form data
+  //     formDataToSend.append("title", formData.title);
+  //     formDataToSend.append("description", formData.description);
+  //     formDataToSend.append("image", formData.image);
+
+  //     await axiosInstance.patch(`blog/updateblogdata`, formDataToSend);
+  //     fetchBlogData()
+  //       .then((result) => {
+  //         setBlog(result);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching user data:", error);
+  //       });
+  //     setShowUpdateModal(false);
+  //   } catch (error) {
+  //     console.error("Error updating blog:", error);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
@@ -135,7 +181,6 @@ const Blog = () => {
     fetchBlogData()
       .then((result) => {
         setBlog(result);
-
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -175,25 +220,26 @@ const Blog = () => {
               </div>
               <div className="container">
                 {blog.map((blogPost, index) => (
-                //   <Card key={blogPost.id} className="mb-3 card">
-                //   {/* Assuming `blogPost.image` contains the binary image data */}
-                //   <Card.Img
-                //     variant="top"
-                //     src=""                   // src={`data:${blogPost.contentType};base64,${blogPost.image.toString('base64')}`}
-                //     className="blog-image"
-                //   />
-                //   <Card.Body>
-                //     <Card.Title className="headerText">
-                //       {blogPost.title}
-                //     </Card.Title>
-                //     <Card.Text>{blogPost.description}</Card.Text>
-                //     {/* Your other card content */}
-                //   </Card.Body>
-                // </Card>
+                  //   <Card key={blogPost.id} className="mb-3 card">
+                  //   {/* Assuming `blogPost.image` contains the binary image data */}
+                  //   <Card.Img
+                  //     variant="top"
+                  //     src=""                   // src={`data:${blogPost.contentType};base64,${blogPost.image.toString('base64')}`}
+                  //     className="blog-image"
+                  //   />
+                  //   <Card.Body>
+                  //     <Card.Title className="headerText">
+                  //       {blogPost.title}
+                  //     </Card.Title>
+                  //     <Card.Text>{blogPost.description}</Card.Text>
+                  //     {/* Your other card content */}
+                  //   </Card.Body>
+                  // </Card>
                   <Card key={blogPost.id} className="mb-3 card">
                     <Card.Img
                       variant="top"
-                      src={blogPost.image}
+                      src={`data:${blogPost.contentType};base64,${blogPost.imageData}`}
+                      alt={blogPost.title}
                       className="blog-image"
                       id="blog-image"
                     />
@@ -202,12 +248,12 @@ const Blog = () => {
                         {blogPost.title}
                       </Card.Title>
                       <Card.Text>{blogPost.description}</Card.Text>
-               {console.log(blogPost.image)}
+
                       {role === "admin" && (
                         <div className="d-flex justify-content-end">
                           <Button
                             variant="warning"
-                            onClick={() => handleShowUpdateModal(blogPost.id)}
+                            onClick={() => handleShowUpdateModal(blogPost._id)}
                             className="me-2"
                           >
                             Edit
