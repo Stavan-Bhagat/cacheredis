@@ -4,9 +4,11 @@ import "../css/signIn-signUp.css";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import axiosInstance from "../utils/axiosInstance";
-import axios from "axios";
+import passwordEncryptionKey from "../Constant/constant"
+// import { AlertTitle, Alert } from "@mui/material";
 
 function SignUp() {
   const {
@@ -15,25 +17,25 @@ function SignUp() {
     formState: { errors },
     watch,
   } = useForm();
+  const passwordEncryptionKey = passwordEncryptionKey;
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async ({ name, email, role, password }) => {
     try {
       const encryptedPassword = CryptoJS.AES.encrypt(
         password,
-        "secretkey123"
+        passwordEncryptionKey
       ).toString();
       const userData = { name, email, role, password: encryptedPassword };
-      const response = await axiosInstance.post("/submit/register", userData);
-
-      console.log("Data posted:", response.data);
+     await axiosInstance.post("/submit/register", userData);
+      navigate("/");
     } catch (error) {
       console.error("Error posting data:", error);
     }
   };
 
   const watchPassword = watch("password", "");
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -123,7 +125,6 @@ function SignUp() {
               </span>
             )}
           </Form.Group>
-
           <Form.Group controlId="formGridConfirmPassword" className="mb-3">
             <Form.Label className="label">Confirm Password</Form.Label>
             <Form.Control

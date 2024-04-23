@@ -4,8 +4,6 @@ const userController = require("../Controller/userController");
 const blogController = require("../Controller/blogController");
 const authentication = require("../middleware/authentication");
 const upload = require("../config/multerConfig");
-// const Image = require('../models/image');
-// const fs = require('fs');
 
 // User routes
 router.post("/register", userController.register);
@@ -22,7 +20,6 @@ router.patch(
   upload.single("image"),
   blogController.updateBlogData
 );
-
 //refresh
 router.get("/refreshtoken", userController.refreshToken);
 

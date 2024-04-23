@@ -6,26 +6,18 @@ const userController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-      console.log(email, password);
       const userData = await userService.login({ email, password });
       if (userData.success) {
-        const expiresIn = "15m";
+        const expiresIn = "15s";
         const email = userData.user.email;
         const accessToken = jwt.sign({ email }, jwtSecretKey, {
           expiresIn,
         });
-        const expirationTime =
-          Math.floor(Date.now() / 1000) + jwt.decode(accessToken).exp;
-        console.log(
-          "Access token expiration time:",
-          new Date(expirationTime * 1000).toLocaleString()
-        );
-
         // Generate refresh token
         const refreshToken = jwt.sign(
           { email: userData.user.email },
           jwtSecretKey,
-          { expiresIn: "30m" }
+          { expiresIn: "1m" }
         );
         res.status(200).json({
           success: true,
@@ -35,8 +27,13 @@ const userController = {
           user: userData.user,
         });
       } else {
-        const { message } = userData;
-        res.status(401).json({ success: false, message });
+        let statusCode = 401;
+        if (userData.message === "Login failed") {
+          statusCode = 404;
+        }
+        res
+          .status(statusCode)
+          .json({ success: false, message: userData.message });
       }
     } catch (error) {
       console.error(`login controller error : ${error}`);
@@ -47,7 +44,6 @@ const userController = {
   register: async (req, res) => {
     try {
       const { name, email, password, role } = req.body;
-      console.log("userData", email, password);
       const getUserData = await userService.register({
         name,
         email,
@@ -92,7 +88,6 @@ const userController = {
   deleteUserData: async (req, res) => {
     try {
       const { id } = req.query;
-      console.log("iddddd", id);
       const blogData = await userService.deleteUserData(id);
       res.status(200).json(blogData);
     } catch (error) {
@@ -102,17 +97,13 @@ const userController = {
   },
   refreshToken: (req, res) => {
     const refreshToken = req.headers["refresh-token"];
-
-    console.log("inside refreshToken", refreshToken);
     try {
       const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
       const newAccessToken = jwt.sign(
         { email: decoded.email },
         process.env.JWT_SECRET_KEY,
-        { expiresIn: "15m" }
+        { expiresIn: "15s" }
       );
-
-      // Send the new access token in the response
       return res.status(200).json({
         message: "Access token refreshed successfully",
         accessToken: newAccessToken,

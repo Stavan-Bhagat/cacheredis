@@ -8,9 +8,7 @@ const blogController = {
       if (!req.file) {
         return res.status(400).json({ error: "No image file uploaded" });
       }
-
       const { title, description } = req.body;
-      console.log("title", title, "descripiton", description);
       const newBlog = await blogService.addBlog(
         { title, description },
         req.file
@@ -25,7 +23,6 @@ const blogController = {
   getBlogData: async (req, res) => {
     try {
       const blogData = await blogService.getBlogData();
-      console.log("dataaaaaaaaaa", blogData);
       res.status(200).json(blogData);
     } catch (error) {
       console.error("Error fetching blog data:", error);
@@ -36,7 +33,6 @@ const blogController = {
   deleteBlogData: async (req, res) => {
     try {
       const { id } = req.query;
-      console.log("iddddd", id);
       const blogData = await blogService.deleteBlogData(id);
       res.status(200).json(blogData);
     } catch (error) {
@@ -45,23 +41,18 @@ const blogController = {
     }
   },
   updateBlogData: async (req, res) => {
-    console.log("reqqqqqqqqqqqqqqqq", req.body);
     try {
       const { id, title, description } = req.body;
-
-      // Check if there's a file uploaded
       let image;
       if (req.file) {
-        image = req.file.buffer; // Access the image buffer
+        image = req.file.buffer;
       }
-
       const updateBlogData = await blogService.updateBlogData(
         id,
         title,
         description,
-        image // Pass the image buffer to the service function
+        image
       );
-
       res.status(200).json(updateBlogData);
     } catch (error) {
       console.error(`updateBlogData controller error : ${error}`);

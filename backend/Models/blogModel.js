@@ -4,7 +4,7 @@ const blogSchema = new mongoose.Schema({
   description: { type: String, required: true },
   filename: String,
   contentType: String,
-  image: Buffer, // Store binary data of the image
+  image: Buffer,
 });
 
 const blogModel = mongoose.model("Blog", blogSchema);

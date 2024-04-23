@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -7,7 +6,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import store from "./store/store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SignIn from "./Component/SignIn";
 import SignUp from "./Component/SignUp";
@@ -28,7 +26,10 @@ function App() {
           path="/dashboard"
           element={isLogin ? <Dashboard /> : <Navigate to="/" />}
         />
-        <Route path="/blog" element={<Blog />} />
+        <Route
+          path="/blog"
+          element={isLogin ? <Blog /> : <Navigate to="/" />}
+        />
       </Routes>
     </Router>
   );

@@ -9,16 +9,14 @@ import {
   Container,
   Image,
 } from "react-bootstrap";
-import axios from "axios";
 import { NavDropdown } from "react-bootstrap";
 import Sidebar from "./Sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
-import { USER_API, fetchUserData } from "../Services/services";
+import { fetchUserData } from "../Services/services";
 import {
   GET_SESSION_USER,
-  GET_IS_LOGIN,
   REMOVE_SESSION_USER,
   REMOVE_IS_LOGIN,
 } from "../Constant/constant";
@@ -29,11 +27,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const userObject = GET_SESSION_USER();
   const userRole = userObject ? userObject.role : null;
-
-  const isLogin = GET_IS_LOGIN;
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  // const isLogin = useSelector((state) => state.auth.isLogin);
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
@@ -44,9 +39,17 @@ const Dashboard = () => {
   });
 
   const [role, setRole] = useState(userRole);
-  console.log("role", role);
   const handleClose = () => setShow(false);
 
+  const fetchData = () => {
+    fetchUserData()
+      .then((result) => {
+        setUsers(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  };
   const handleLogout = () => {
     dispatch(logout());
     REMOVE_SESSION_USER();
@@ -55,13 +58,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchUserData()
-      .then((result) => {
-        setUsers(result);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
+    fetchData();
   }, []);
 
   const handleShow = (id) => {
@@ -89,13 +86,7 @@ const Dashboard = () => {
         formData
       );
       console.log("Data successfully updated:", responsePost.data);
-      fetchUserData()
-        .then((result) => {
-          setUsers(result);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
+      fetchData();
       setShow(false);
     } catch (error) {
       console.error("Error updating data:", error);
@@ -108,13 +99,7 @@ const Dashboard = () => {
       try {
         await axiosInstance.delete(`submit/deleteuserdata?id=${userId}`);
         console.log(`User deleted with ID ${userId}`);
-        fetchUserData()
-          .then((result) => {
-            setUsers(result);
-          })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-          });
+        fetchData();
       } catch (error) {
         console.error("Error deleting user:", error);
       }
@@ -140,7 +125,6 @@ const Dashboard = () => {
       <Container fluid className="dashboardContainer">
         <Row>
           <Sidebar />
-
           <Col sm={10}>
             <section className="mt-3">
               <div className="container">
@@ -165,7 +149,6 @@ const Dashboard = () => {
                           <td>{user.email}</td>
                           <td>{user.role}</td>
                           <td>
-                            {console.log("userrrrrrrrrrrrrrr", user)}
                             <Button
                               variant="warning"
                               onClick={() => handleShow(user._id)}
@@ -195,10 +178,6 @@ const Dashboard = () => {
                   </Table>
                 ) : (
                   <Container className="text-white ">
-                    {/* <h4>
-                      Welcome to user
-                      <span className="text-danger">Dashboard</span> section
-                    </h4> */}
                     <Image
                       src={welcomeImage}
                       alt="welcome"

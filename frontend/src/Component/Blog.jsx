@@ -13,12 +13,13 @@ import {
 import "../css/dashboard.css";
 import axiosInstance from "../utils/axiosInstance";
 import Sidebar from "./Sidebar";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import { fetchBlogData } from "../Services/services";
 import { REMOVE_SESSION_USER } from "../Constant/constant";
 import "../css/blog.css";
+// import { AlertTitle, Alert } from "@mui/material";
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -30,21 +31,31 @@ const Blog = () => {
   const [blog, setBlog] = useState([]);
   const userRole = user.role;
   const [role, setRole] = useState(userRole);
+  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    image: null, // Added state to store selected file
+    image: null,
   });
 
   const handleCloseAddModal = () => setShowAddModal(false);
   const handleCloseUpdateModal = () => setShowUpdateModal(false);
+
+  const fetchData = () => {
+    fetchBlogData()
+      .then((result) => {
+        setBlog(result);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  };
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    // If the input is a file input, update the image state
     if (name === "image") {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        image: files[0], // Store the first selected file
+        image: files[0],
       }));
     } else {
       setFormData((prevFormData) => ({
@@ -53,7 +64,6 @@ const Blog = () => {
       }));
     }
   };
-
   const handleLogout = () => {
     dispatch(logout(false));
     REMOVE_SESSION_USER();
@@ -71,7 +81,6 @@ const Blog = () => {
 
   const handleShowUpdateModal = (id) => {
     const matchedBlog = blog.find((blog) => blog._id === id);
-    console.log("matchblogid", matchedBlog._id);
     setFormData({
       id: matchedBlog._id,
       title: matchedBlog.title,
@@ -80,17 +89,6 @@ const Blog = () => {
     });
     setShowUpdateModal(true);
   };
-  // const handleShowUpdateModal = (id) => {
-  //   const matchedBlog = blog.find((blogPost) => blogPost._id === id); // Change blogPost.id to blogPost._id
-  //   setFormData({
-  //     ...formData,
-  //     id: matchedBlog._id,
-  //     title: matchedBlog.title,
-  //     description: matchedBlog.description,
-  //     image: null,
-  //   });
-  //   setShowUpdateModal(true);
-  // };
 
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
@@ -100,18 +98,14 @@ const Blog = () => {
       formDataToSend.append("description", formData.description);
       formDataToSend.append("image", formData.image);
       await axiosInstance.post("/blog/addblogdata", formDataToSend);
-      fetchBlogData()
-        .then((result) => {
-          setBlog(result);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
+      fetchData();
       setShowAddModal(false);
+      // setShowSuccessAlert(true);
     } catch (error) {
       console.error("Error adding blog:", error);
     }
   };
+
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -122,55 +116,19 @@ const Blog = () => {
       formDataToSend.append("image", formData.image);
 
       await axiosInstance.patch("/blog/updateblogdata", formDataToSend);
-
-      fetchBlogData()
-        .then((result) => {
-          setBlog(result);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
+      fetchData();
       setShowUpdateModal(false);
     } catch (error) {
       console.error("Error updating blog:", error);
     }
   };
-  // const handleSubmitUpdate = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const formDataToSend = new FormData();
-  //     formDataToSend.append("id", formData._id); // Add id to the form data
-  //     formDataToSend.append("title", formData.title);
-  //     formDataToSend.append("description", formData.description);
-  //     formDataToSend.append("image", formData.image);
-
-  //     await axiosInstance.patch(`blog/updateblogdata`, formDataToSend);
-  //     fetchBlogData()
-  //       .then((result) => {
-  //         setBlog(result);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching user data:", error);
-  //       });
-  //     setShowUpdateModal(false);
-  //   } catch (error) {
-  //     console.error("Error updating blog:", error);
-  //   }
-  // };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
     if (confirmDelete) {
       try {
         await axiosInstance.delete(`blog/deleteblogdata?id=${id}`);
-
-        fetchBlogData()
-          .then((result) => {
-            setBlog(result);
-          })
-          .catch((error) => {
-            console.error("Error fetching user data:", error);
-          });
+        fetchData();
       } catch (error) {
         console.error("Error deleting blog:", error);
       }
@@ -178,16 +136,12 @@ const Blog = () => {
       return;
     }
   };
+
   useEffect(() => {
-    fetchBlogData()
-      .then((result) => {
-        setLoading(false);
-        setBlog(result);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
+    fetchData();
+    setLoading(false);
   }, []);
+
   if (loading) {
     return (
       <div className="loader-container">
@@ -359,6 +313,16 @@ const Blog = () => {
         </Modal.Footer>
       </Modal>
       {/* Update Blog Modal End */}
+      {/* Success Alert */}
+      {/* <Alert
+        severity="success"
+        open={showSuccessAlert}
+        onClose={() => setShowSuccessAlert(false)} 
+        sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
+      >
+        <AlertTitle>Success</AlertTitle>
+        Blog Added Successfully
+      </Alert> */}
     </>
   );
 };
