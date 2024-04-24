@@ -19,7 +19,7 @@ import { logout } from "../store/authSlice";
 import { fetchBlogData } from "../Services/services";
 import { REMOVE_SESSION_USER } from "../Constant/constant";
 import "../css/blog.css";
-// import { AlertTitle, Alert } from "@mui/material";
+import { AlertTitle, Alert } from "@mui/material";
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -31,7 +31,9 @@ const Blog = () => {
   const [blog, setBlog] = useState([]);
   const userRole = user.role;
   const [role, setRole] = useState(userRole);
-  // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showUpdateAlert, SetShowUpdateAlert] = useState(false);
+  const [showDeleteAlert, SetShowDeleteAlert] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -100,7 +102,7 @@ const Blog = () => {
       await axiosInstance.post("/blog/addblogdata", formDataToSend);
       fetchData();
       setShowAddModal(false);
-      // setShowSuccessAlert(true);
+      setShowSuccessAlert(true);
     } catch (error) {
       console.error("Error adding blog:", error);
     }
@@ -118,6 +120,7 @@ const Blog = () => {
       await axiosInstance.patch("/blog/updateblogdata", formDataToSend);
       fetchData();
       setShowUpdateModal(false);
+      SetShowUpdateAlert(true);
     } catch (error) {
       console.error("Error updating blog:", error);
     }
@@ -129,6 +132,7 @@ const Blog = () => {
       try {
         await axiosInstance.delete(`blog/deleteblogdata?id=${id}`);
         fetchData();
+        SetShowDeleteAlert(true);
       } catch (error) {
         console.error("Error deleting blog:", error);
       }
@@ -313,16 +317,38 @@ const Blog = () => {
         </Modal.Footer>
       </Modal>
       {/* Update Blog Modal End */}
+
       {/* Success Alert */}
-      {/* <Alert
-        severity="success"
-        open={showSuccessAlert}
-        onClose={() => setShowSuccessAlert(false)} 
-        sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
-      >
-        <AlertTitle>Success</AlertTitle>
-        Blog Added Successfully
-      </Alert> */}
+      {showSuccessAlert && (
+        <Alert
+          severity="success"
+          onClose={() => setShowSuccessAlert(false)}
+          sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
+        >
+          <AlertTitle>Success</AlertTitle>
+          Blog Added Successfully
+        </Alert>
+      )}
+      {showUpdateAlert && (
+        <Alert
+          severity="info"
+          onClose={() => SetShowUpdateAlert(false)}
+          sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
+        >
+          <AlertTitle>Updated</AlertTitle>
+          Blog Updated Successfully
+        </Alert>
+      )}
+      {showDeleteAlert && (
+        <Alert
+          severity="warning"
+          onClose={() => SetShowDeleteAlert(false)}
+          sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
+        >
+          <AlertTitle>Deleted</AlertTitle>
+          Blog Deleted Successfully
+        </Alert>
+      )}
     </>
   );
 };

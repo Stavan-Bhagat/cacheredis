@@ -22,6 +22,7 @@ import {
 } from "../Constant/constant";
 import axiosInstance from "../utils/axiosInstance";
 import welcomeImage from "../image/welcome.jpg";
+import { AlertTitle, Alert } from "@mui/material";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
+  const [showUpdateAlert, SetShowUpdateAlert] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -88,6 +90,7 @@ const Dashboard = () => {
       console.log("Data successfully updated:", responsePost.data);
       fetchData();
       setShow(false);
+      SetShowUpdateAlert(true);
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -242,6 +245,17 @@ const Dashboard = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      {/* update alert */}
+      {showUpdateAlert && (
+        <Alert
+          severity="info"
+          onClose={() => SetShowUpdateAlert(false)}
+          sx={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}
+        >
+          <AlertTitle>Updated</AlertTitle>
+          Blog Updated Successfully
+        </Alert>
+      )}
     </>
   );
 };

@@ -7,9 +7,10 @@ import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import axiosInstance from "../utils/axiosInstance";
-import passwordEncryptionKey from "../Constant/constant"
+import {passwordEncryptionKey} from "../Constant/constant";
+// import CheckCircleIcon from '@mui/icons-material';
 // import { AlertTitle, Alert } from "@mui/material";
-
+// import Toast from "react-bootstrap/Toast";
 function SignUp() {
   const {
     register,
@@ -17,7 +18,8 @@ function SignUp() {
     formState: { errors },
     watch,
   } = useForm();
-  const passwordEncryptionKey = passwordEncryptionKey;
+  // const [showA, setShowA] = useState(true);
+  // const toggleShowA = () => setShowA(!showA);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,7 +30,7 @@ function SignUp() {
         passwordEncryptionKey
       ).toString();
       const userData = { name, email, role, password: encryptedPassword };
-     await axiosInstance.post("/submit/register", userData);
+      await axiosInstance.post("/submit/register", userData);
       navigate("/");
     } catch (error) {
       console.error("Error posting data:", error);
@@ -150,6 +152,14 @@ function SignUp() {
           </p>
         </Form>
       </div>
+      {/* Toast */}
+      {/* <Toast show={showA} onClose={toggleShowA}>
+        <Toast.Header closeButton={false}>
+          <CheckCircleIcon sx={{ mr: 2 }} />
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>User Register Successfully</Toast.Body>
+      </Toast> */}
     </>
   );
 }
