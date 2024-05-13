@@ -11,6 +11,7 @@ const corsOrigin = process.env.CORS_ORIGIN;
 database();
 
 app.use(express.json());
+app.use(cors({ origin: '*' }));
 app.use(cors({ origin: corsOrigin }));
 app.use("/submit", userRoutes);
 app.use("/blog", blogRoutes);
