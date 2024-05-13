@@ -12,7 +12,7 @@ database();
 
 app.use(express.json());
 app.use(cors({ origin: '*' }));
-app.use(cors({ origin: corsOrigin }));
+app.use(cors({ origin: [https://aspire-task-5-react-node-1.vercel.app/, https://aspire-task-5-react-node-1.vercel.app] }));
 app.use("/submit", userRoutes);
 app.use("/blog", blogRoutes);
 app.use("/refresh", userRoutes);
