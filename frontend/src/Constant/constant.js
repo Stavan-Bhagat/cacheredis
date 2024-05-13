@@ -15,6 +15,6 @@ export const SET_IS_LOGIN = (value) => {
 export const SET_NAME = (value) => {
   sessionStorage.setItem("name", value);
 };
-export const REACT_PORT = 3000;
+// export const REACT_PORT = 3000;
 export const BASEURL = "https://blog-site-u6nk.onrender.com/";
 export const passwordEncryptionKey="secretkey123";
