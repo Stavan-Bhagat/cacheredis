@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
           throw new Error("No refresh token available");
         }
         const refreshResponse = await axios.get(
-          `http://localhost:5000/refresh/refreshtoken`,
+          `https://blog-q0l1.onrender.com/refresh/refreshtoken`,
           {
             headers: { "refresh-token": refreshToken },
           }
