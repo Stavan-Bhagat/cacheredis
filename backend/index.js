@@ -5,7 +5,7 @@ require("dotenv").config();
 const userRoutes = require("./Routes/allRoutes");
 const blogRoutes = require("./Routes/allRoutes");
 const app = express();
-const port = process.env.PORT||8080;
+const port = process.env.PORT || 8080;
 
 database();
 
