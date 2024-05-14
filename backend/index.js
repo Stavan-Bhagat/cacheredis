@@ -14,6 +14,8 @@ app.use(cors({
   origin: [
     "https://blog-psi-five-36.vercel.app",
     "https://blog-psi-five-36.vercel.app/",
+    "blog-i3v3pvoto-stavan-bhagats-projects.vercel.app",
+    "blog-i3v3pvoto-stavan-bhagats-projects.vercel.app/",
     "http://localhost:3000",
     "http://localhost:3000/"
   ]
