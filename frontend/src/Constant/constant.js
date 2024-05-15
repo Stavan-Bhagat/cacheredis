@@ -16,5 +16,6 @@ export const SET_NAME = (value) => {
   sessionStorage.setItem("name", value);
 };
 // export const REACT_PORT = 3000;
-export const BASEURL = "https://blog-q0l1.onrender.com/";
+// export const BASEURL = "https://blog-q0l1.onrender.com/";
+export const BASEURL = "http://localhost:5000/";
 export const passwordEncryptionKey="secretkey123";

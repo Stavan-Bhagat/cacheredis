@@ -52,6 +52,7 @@ const Blog = () => {
         console.error("Error fetching user data:", error);
       });
   };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
@@ -66,6 +67,21 @@ const Blog = () => {
       }));
     }
   };
+
+  // const handleChange = (e) => {
+  //   const { name, value, files } = e.target;
+  //   if (name === "image") {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       image: files[0],
+  //     }));
+  //   } else {
+  //     setFormData((prevFormData) => ({
+  //       ...prevFormData,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
   const handleLogout = () => {
     dispatch(logout(false));
     REMOVE_SESSION_USER();
@@ -91,7 +107,6 @@ const Blog = () => {
     });
     setShowUpdateModal(true);
   };
-
   const handleSubmitAdd = async (e) => {
     e.preventDefault();
     try {
@@ -107,7 +122,6 @@ const Blog = () => {
       console.error("Error adding blog:", error);
     }
   };
-
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -125,6 +139,39 @@ const Blog = () => {
       console.error("Error updating blog:", error);
     }
   };
+  // const handleSubmitAdd = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const formDataToSend = new FormData();
+  //     formDataToSend.append("title", formData.title);
+  //     formDataToSend.append("description", formData.description);
+  //     formDataToSend.append("image", formData.image);
+  //     await axiosInstance.post("/blog/addblogdata", formDataToSend);
+  //     fetchData();
+  //     setShowAddModal(false);
+  //     setShowSuccessAlert(true);
+  //   } catch (error) {
+  //     console.error("Error adding blog:", error);
+  //   }
+  // };
+
+  // const handleSubmitUpdate = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const formDataToSend = new FormData();
+  //     formDataToSend.append("id", formData.id);
+  //     formDataToSend.append("title", formData.title);
+  //     formDataToSend.append("description", formData.description);
+  //     formDataToSend.append("image", formData.image);
+
+  //     await axiosInstance.patch("/blog/updateblogdata", formDataToSend);
+  //     fetchData();
+  //     setShowUpdateModal(false);
+  //     SetShowUpdateAlert(true);
+  //   } catch (error) {
+  //     console.error("Error updating blog:", error);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete?");
@@ -193,11 +240,18 @@ const Blog = () => {
                   <Card key={blogPost.id} className="mb-3 card">
                     <Card.Img
                       variant="top"
-                      src={`data:${blogPost.contentType};base64,${blogPost.imageData}`}
+                      src={blogPost.imageUrl} // Update to use Cloudinary URL
                       alt={blogPost.title}
                       className="blog-image"
                       id="blog-image"
                     />
+                    {/* <Card.Img
+                      variant="top"
+                      src={`data:${blogPost.contentType};base64,${blogPost.imageData}`}
+                      alt={blogPost.title}
+                      className="blog-image"
+                      id="blog-image"
+                    /> */}
                     <Card.Body>
                       <Card.Title className="headerText">
                         {blogPost.title}

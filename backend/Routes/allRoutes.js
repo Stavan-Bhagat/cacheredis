@@ -20,6 +20,22 @@ router.patch(
   upload.single("image"),
   blogController.updateBlogData
 );
+// cloud
+router.post('/upload', upload.single('image'), (req, res) => {
+  try {
+    // File uploaded to Cloudinary, response contains the Cloudinary file info
+    res.status(200).json({
+      message: 'Image uploaded successfully',
+      url: req.file.path, // Cloudinary URL
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'An error occurred during upload',
+      error: err.message,
+    });
+  }
+});
+
 //refresh
 router.get("/refreshtoken", userController.refreshToken);
 

@@ -1,20 +1,13 @@
 const Blog = require("../Models/blogModel");
 const blogService = {
-  addBlog: async (blogData, file) => {
+  addBlog: async (blogData) => {
     try {
-      const { title, description } = blogData;
-      if (!file || !file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        throw new Error("Please upload a valid image file");
-      }
-
+      const { title, description, imageUrl } = blogData;
       const newBlog = new Blog({
         title,
         description,
-        filename: file.originalname,
-        contentType: file.mimetype,
-        image: file.buffer,
+        imageUrl, // Store the Cloudinary URL instead of image buffer
       });
-
       const createdBlog = await newBlog.save();
       return createdBlog;
     } catch (error) {
@@ -22,6 +15,28 @@ const blogService = {
       throw error;
     }
   },
+  // addBlog: async (blogData, file) => {
+  //   try {
+  //     const { title, description } = blogData;
+  //     if (!file || !file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+  //       throw new Error("Please upload a valid image file");
+  //     }
+
+  //     const newBlog = new Blog({
+  //       title,
+  //       description,
+  //       filename: file.originalname,
+  //       contentType: file.mimetype,
+  //       image: file.buffer,
+  //     });
+
+  //     const createdBlog = await newBlog.save();
+  //     return createdBlog;
+  //   } catch (error) {
+  //     console.error("Error adding blog:", error);
+  //     throw error;
+  //   }
+  // },
   getBlogData: async () => {
     try {
       const blogData = await Blog.find({});
