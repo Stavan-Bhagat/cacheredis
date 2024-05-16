@@ -12,8 +12,8 @@ database();
 app.use(express.json());
 app.use(cors({
   origin: [
-   "cloudinaryblog.vercel.app",
-   "cloudinaryblog.vercel.app/",
+   "https://cloudinaryblog.vercel.app/",
+   "https://cloudinaryblog.vercel.app",
     "http://localhost:3000/",
     "http://localhost:3000"
   ]
