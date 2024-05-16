@@ -40,13 +40,13 @@ const blogService = {
   getBlogData: async () => {
     try {
       const blogData = await Blog.find({});
-      const blogsWithImageData = blogData.map((blog) => {
-        return {
-          ...blog.toJSON(),
-          imageData: Buffer.from(blog.image.buffer).toString("base64"),
-        };
-      });
-      return blogsWithImageData;
+      // const blogsWithImageData = blogData.map((blog) => {
+      //   return {
+      //     ...blog.toJSON(),
+      //     imageData: Buffer.from(blog.image.buffer).toString("base64"),
+      //   };
+      // });
+      return blogData;
     } catch (error) {
       console.error("Error fetching blog data:", error);
       throw error;
@@ -62,11 +62,11 @@ const blogService = {
       throw error;
     }
   },
-  updateBlogData: async (id, title, description, image) => {
+  updateBlogData: async (id, title, description, imageUrl) => {
     try {
       let updateFields = { title, description };
-      if (image) {
-        updateFields.image = image;
+      if (imageUrl) {
+        updateFields.imageUrl = imageUrl;
       }
 
       const updatedBlogData = await Blog.findByIdAndUpdate(id, updateFields, {

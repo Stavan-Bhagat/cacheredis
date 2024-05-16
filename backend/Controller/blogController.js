@@ -57,15 +57,15 @@ const blogController = {
   updateBlogData: async (req, res) => {
     try {
       const { id, title, description } = req.body;
-      let image;
+      let imageUrl;
       if (req.file) {
-        image = req.file.buffer;
+        imageUrl = req.file.path;
       }
       const updateBlogData = await blogService.updateBlogData(
         id,
         title,
         description,
-        image
+        imageUrl
       );
       res.status(200).json(updateBlogData);
     } catch (error) {
