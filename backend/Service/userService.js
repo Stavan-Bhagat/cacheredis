@@ -59,9 +59,11 @@ const userService = {
       throw error;
     }
   },
-  updateUserData: async ({ id, name, email, password, role }) => {
+  updateUserData: async ({ id, name, email, password, role,imageUrl }) => {
     try {
-      let updateFields = { name, email, password, role };
+      console.log("ser",imageUrl)
+      let updateFields = { name, email, password, role ,imageUrl};  
+
       const updatedUserData = await User.findByIdAndUpdate(id, updateFields, {
         new: true,
       });

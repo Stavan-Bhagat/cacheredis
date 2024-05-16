@@ -8,8 +8,8 @@ import {
   Row,
   Container,
   Image,
+  NavDropdown,
 } from "react-bootstrap";
-import { NavDropdown } from "react-bootstrap";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -137,6 +137,7 @@ const Dashboard = () => {
                     <thead>
                       <tr>
                         <th>No</th>
+                        <th>profile</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -148,6 +149,16 @@ const Dashboard = () => {
                       {users.map((user, index) => (
                         <tr key={user._id}>
                           <td>{index + 1}</td>
+                          <td>
+                            {" "}
+                            <div className="user-image-wrapper">
+                              <Image
+                                src={user.imageUrl}
+                                alt="User Image"
+                                className="user-image"
+                              />
+                            </div>
+                          </td>
                           <td>{user.name}</td>
                           <td>{user.email}</td>
                           <td>{user.role}</td>

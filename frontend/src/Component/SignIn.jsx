@@ -8,7 +8,7 @@ import { SET_NAME } from "../Constant/constant";
 import axiosInstance from "../utils/axiosInstance";
 import { loginSuccess, loginFailure } from "../store/authSlice";
 
-function SignIn() {
+function SignIn() { 
   const {
     register,
     handleSubmit,

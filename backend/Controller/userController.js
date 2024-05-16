@@ -70,13 +70,20 @@ const userController = {
   updateUserData: async (req, res) => {
     try {
       const { id } = req.query;
+      console.log("id",id);
       const { name, email, password, role } = req.body;
+      let imageUrl;
+      if (req.file) {
+        imageUrl = req.file.path;
+        console.log("if",imageUrl);
+      }
       const updateBlogData = await userService.updateUserData({
         id,
         name,
         email,
         password,
         role,
+        imageUrl
       });
 
       res.status(200).json(updateBlogData);

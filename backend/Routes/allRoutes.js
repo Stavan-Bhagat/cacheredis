@@ -8,7 +8,11 @@ const upload = require("../config/multerConfig");
 // User routes
 router.post("/register", userController.register);
 router.post("/login", userController.login);
-router.patch("/updateuserdata", userController.updateUserData);
+router.patch(
+  "/updateuserdata",
+  upload.single("image"),
+  userController.updateUserData
+);
 router.delete("/deleteuserdata", userController.deleteUserData);
 router.get("/userdata", authentication, userController.getUserData);
 // blog routes
@@ -21,16 +25,16 @@ router.patch(
   blogController.updateBlogData
 );
 // cloud
-router.post('/upload', upload.single('image'), (req, res) => {
+router.post("/upload", upload.single("image"), (req, res) => {
   try {
     // File uploaded to Cloudinary, response contains the Cloudinary file info
     res.status(200).json({
-      message: 'Image uploaded successfully',
+      message: "Image uploaded successfully",
       url: req.file.path, // Cloudinary URL
     });
   } catch (err) {
     res.status(500).json({
-      message: 'An error occurred during upload',
+      message: "An error occurred during upload",
       error: err.message,
     });
   }
