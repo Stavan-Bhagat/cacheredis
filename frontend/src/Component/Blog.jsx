@@ -421,20 +421,7 @@ const Blog = () => {
     }
   };
 
-  // const handleChange = (e) => {
-  //   const { name, value, files } = e.target;
-  //   if (name === "image") {
-  //     setFormData((prevFormData) => ({
-  //       ...prevFormData,
-  //       image: files[0],
-  //     }));
-  //   } else {
-  //     setFormData((prevFormData) => ({
-  //       ...prevFormData,
-  //       [name]: value,
-  //     }));
-  //   }
-  // };
+ 
   const handleLogout = () => {
     dispatch(logout(false));
     REMOVE_SESSION_USER();

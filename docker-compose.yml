@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend   # Path to the frontend application Dockerfile
+    ports:
+      - "3000:3000"         # Map frontend application port
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend    # Path to the backend application Dockerfile
+    ports:
+      - "5000:5000"         # Map backend application port
+    depends_on:
+      - redis-stack         # Ensure backend waits for Redis container to be ready
+    networks:
+      - app-network
+
+  redis-stack:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"         # Map Redis server port
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
